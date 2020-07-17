@@ -2,5 +2,27 @@
   "python.pythonPath": ".venv/bin/python",
   "python.autoComplete.extraPaths": [
     "reckonup"
-  ]
+  ],
+  "editor.tabSize": 2,
+  "python.linting.pylintArgs": [
+    "--indent-string=\"  \""
+  ],
+  "python.formatting.autopep8Args": [
+    "--indent-size=2",
+    "--indent-after-paren=2",
+    "--ignore=E402"
+  ],
+  "python.linting.pylintEnabled": false,
+  "python.linting.pep8Enabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": [
+    "--ignore=E111,E114,E402,E501"
+  ],
+  "[python]": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+  },
+  "editor.formatOnSave": true,
 }
