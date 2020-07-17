@@ -29,7 +29,7 @@ export default class Navigation extends React.Component<NavigationProps> {
     return <Bulma.Navbar navbarType={Bulma.NavbarType.Nav} options={[Bulma.Color.Light]}>
       <Bulma.NavbarBrand>
         <Bulma.NavbarItem itemType={Bulma.NavbarItemType.Anchor}>
-          <img src="/static/image/reckonup-logo.png" style={{height: '34px', maxHeight: '34px'}}/>
+          <img src="/static/image/reckonup-logo.svg" style={{ height: '34px', maxHeight: '34px' }} />
         </Bulma.NavbarItem>
         <Bulma.NavbarBurger onClick={()=>this.props.actions?.toggleBurger()} options={[this.props.isBurgerActive?Bulma.State.Active:null]} />
       </Bulma.NavbarBrand>
