@@ -56,6 +56,11 @@ ROOT_URLCONF = 'reckonup.urls'
 
 CLIENT_DIR = os.path.abspath(os.path.join(BASE_DIR, '..', 'reckonup-client'))
 
+if DEBUG:
+  CLIENT_DIST_DIR = os.path.join(CLIENT_DIR, 'dev')
+else:
+  CLIENT_DIST_DIR = os.path.join(CLIENT_DIR, 'dist')
+
 TEMPLATES = [
   {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -129,11 +134,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if DEBUG:
-  STATICFILES_DIRS = [
-    os.path.join(CLIENT_DIR, 'dev', 'static'),
-  ]
-else:
-  STATICFILES_DIRS = [
-    os.path.join(CLIENT_DIR, 'dist', 'static'),
-  ]
+STATICFILES_DIRS = [
+  os.path.join(CLIENT_DIST_DIR, 'static')
+]
