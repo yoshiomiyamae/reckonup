@@ -8,6 +8,7 @@ authors = ["Yoshio Miyamae <yoshio.miyamae@famoce-succellion.com>"]
 python = "^3.6.9"
 django = "^3.0.8"
 djangorestframework = "^3.11.0"
+pillow = "^7.2.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.3"

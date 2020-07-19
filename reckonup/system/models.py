@@ -19,24 +19,46 @@ class Profile(models.Model):
 
 
 class Classification(models.Model):
-  name = models.CharField()
+  name = models.CharField(max_length=64)
 
 
 class Department(models.Model):
-  name = models.CharField()
-  latitude = models.DecimalField()
-  longitude = models.DecimalField()
-
-
-class Currency(models.Model):
-  name = models.CharField()
-  code = models.CharField()
-  code_number = models.IntegerField()
-  country = models.ForeignKey(
-    'Country',
+  name = models.CharField(max_length=64)
+  latitude = models.DecimalField(
+    decimal_places=17,
+    max_digits=20
+  )
+  longitude = models.DecimalField(
+    decimal_places=17,
+    max_digits=20
+  )
+  parent = models.ForeignKey(
+    'Department',
     on_delete=models.CASCADE
   )
 
 
+class Currency(models.Model):
+  name = models.CharField(max_length=64)
+  code = models.CharField(max_length=3)
+  code_number = models.IntegerField()
+
+
 class Country(models.Model):
-  name = models.CharField()
+  name = models.CharField(max_length=64)
+  code = models.CharField(max_length=3)
+  code2 = models.CharField(max_length=2)
+  numeric = models.IntegerField()
+  country_flag = models.ImageField()
+  latitude = models.DecimalField(
+    decimal_places=17,
+    max_digits=20
+  )
+  longitude = models.DecimalField(
+    decimal_places=17,
+    max_digits=20
+  )
+  currency = models.ForeignKey(
+    Currency,
+    on_delete=models.CASCADE
+  )
