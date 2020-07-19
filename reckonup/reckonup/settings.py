@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from reckonup.common import get_files
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_NAME = os.path.basename(PROJECT_DIR)
+BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -27,7 +29,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+USER_APPLICATIONS = [
+  directory_name
+  for _, directory_name in get_files(
+    BASE_DIR,
+    mode='directories',
+    recursive=False,
+    include_hidden=False
+  )
+  if directory_name not in [PROJECT_NAME, 'data', ]
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,9 +49,7 @@ INSTALLED_APPS = [
   'django.contrib.messages',
   'django.contrib.staticfiles',
   'rest_framework',
-
-  'system',
-]
+] + USER_APPLICATIONS
 
 MIDDLEWARE = [
   'django.middleware.security.SecurityMiddleware',
