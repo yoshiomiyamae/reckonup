@@ -26,7 +26,9 @@
     ]
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "connected-react-router": "^6.8.0",
+    "crypto": "^1.0.1",
     "history": "^5.0.0",
     "i18next": "^19.6.0",
     "i18next-browser-languagedetector": "^5.0.0",

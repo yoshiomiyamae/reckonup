@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from system.views import index
 from .settings import USER_APPLICATIONS
+from rest_framework_jwt.views import obtain_jwt_token
 
 
 def check_url_module(application_name):
@@ -25,8 +26,8 @@ def check_url_module(application_name):
     __import__(url_module_name)
   except ImportError:
     return None
-  return re_path(
-    f'^api/{application_name}/',
+  return path(
+    f'api/{application_name}/',
     include(f'{application_name}.urls')
   )
 
@@ -40,7 +41,8 @@ application_urlpatterns = [
 ]
 
 urlpatterns = application_urlpatterns + [
+  path('api-auth/', obtain_jwt_token),
   path('admin/', admin.site.urls),
-  re_path(r'^$', index),
+  path('', index),
   re_path(r'^(?:.*)/?$', index),
 ]
