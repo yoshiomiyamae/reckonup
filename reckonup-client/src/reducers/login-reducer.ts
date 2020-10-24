@@ -9,6 +9,7 @@ export interface LoginState {
   isLoggedIn: boolean;
   loginErrorMessage: string;
   user: User;
+  isLoginChecked: boolean;
 }
 
 const initialState: LoginState = {
@@ -19,6 +20,7 @@ const initialState: LoginState = {
   isLoggedIn: false,
   loginErrorMessage: "",
   user: <User>{},
+  isLoginChecked: false,
 };
 
 export const loginReducer = (
@@ -66,6 +68,12 @@ export const loginReducer = (
       return <LoginState>{
         ...state,
         user: action.data,
+      };
+    }
+    case LoginActionTypes.setIsLoginChecked: {
+      return <LoginState>{
+        ...state,
+        isLoginChecked: action.data,
       };
     }
     default: {

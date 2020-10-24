@@ -41,8 +41,8 @@ application_urlpatterns = [
 ]
 
 urlpatterns = application_urlpatterns + [
-  path('api-auth/', obtain_jwt_token),
   path('admin/', admin.site.urls),
+  path('api-auth/', obtain_jwt_token),
   path('', index),
   re_path(r'^(?:.*)/?$', index),
 ]

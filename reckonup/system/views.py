@@ -24,7 +24,6 @@ class AuthenticationInformationView(generics.RetrieveAPIView):
   permission_classes = (permissions.IsAuthenticated,)
 
   def get(self, request, format=None):
-    print(request.user.__dict__)
     return Response(data={
       'id': request.user.id,
       'last_login': request.user.last_login,

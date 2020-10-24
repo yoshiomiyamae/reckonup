@@ -63,7 +63,7 @@ export default class Navigation extends React.Component<NavigationProps> {
             ? [
                 <Bulma.NavbarStart>
                   <Bulma.NavbarItem itemType={Bulma.NavbarItemType.Anchor}>
-                    <a href="/">{t("test")}</a>
+                    <a href="/travel-expense">{t("TravelExpense")}</a>
                   </Bulma.NavbarItem>
                 </Bulma.NavbarStart>,
                 <Bulma.NavbarEnd>

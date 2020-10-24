@@ -25,4 +25,7 @@
     "editor.formatOnType": false,
   },
   "editor.formatOnSave": true,
+  "python.analysis.extraPaths": [
+    "reckonup"
+  ],
 }

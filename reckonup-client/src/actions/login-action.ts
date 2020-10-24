@@ -9,6 +9,7 @@ export enum LoginActionTypes {
   setIsLoggedIn = "login-set-is-logged-in",
   setLoginErrorMessage = "login-set-login-error-message",
   setUser = "login-set-user",
+  setIsLoginChecked = "login-set-is-login-checked",
 }
 
 export interface LoginAction extends Action<LoginActionTypes> {
@@ -56,6 +57,12 @@ export class LoginActionDispatcher extends ActionDispatcher<LoginActionTypes> {
     (user: User): LoginAction => ({
       type: LoginActionTypes.setUser,
       data: user,
+    })
+  );
+  setIsLoginChecked = this.dispatcher(
+    (isLoginChecked: boolean): LoginAction => ({
+      type: LoginActionTypes.setIsLoginChecked,
+      data: isLoginChecked,
     })
   );
 }

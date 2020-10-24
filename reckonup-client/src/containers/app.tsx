@@ -7,10 +7,19 @@ import Test from "./test";
 import { LocalizationProps } from "../common/i18n";
 import { withTranslation } from "react-i18next";
 import Login from "./login";
+import { LoginState } from "../reducers/login-reducer";
+import TravelExpense from "./travel-expense";
 
-interface AppProps extends LocalizationProps {}
+interface AppProps extends LocalizationProps {
+  isLoggedIn?: boolean;
+}
 
-@(connect((state) => ({}), {}) as any)
+@(connect(
+  (state: { loginReducer: LoginState }): AppProps => ({
+    isLoggedIn: state.loginReducer.isLoggedIn,
+  }),
+  (dispatch) => ({})
+) as any)
 @(withTranslation() as any)
 export default class App extends React.Component<AppProps> {
   render() {
@@ -22,12 +31,14 @@ export default class App extends React.Component<AppProps> {
     return (
       <div>
         <Navigation />
-        <Switch>
-          <Route exact path="/">
-            <Login />
-          </Route>
-          <Route path="/test" component={Test} />
-        </Switch>
+        {this.props.isLoggedIn ? (
+          <Switch>
+            <Route exact path="/" component={Test} />
+            <Route path="/travel-expense" component={TravelExpense} />
+          </Switch>
+        ) : (
+          <Login />
+        )}
       </div>
     );
   }
