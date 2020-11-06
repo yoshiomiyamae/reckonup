@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack --colors --config ./webpack.config.dev.js && poetry run ../reckonup/manage.py runserver",
     "build": "webpack --colors --config ./webpack.config.js",
-    "i18next-extract": "NODE_ENV=development babel './src/**/*.{js,jsx,ts,tsx}'"
+    "i18next-extract": "NODE_ENV=development babel './src/**/*.{js,jsx,ts,tsx}'",
+    "migrate": "poetry run ../reckonup/manage.py makemigrations && poetry run ../reckonup/manage.py migrate"
   },
   "babel": {
     "presets": [
