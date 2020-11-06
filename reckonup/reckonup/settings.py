@@ -91,7 +91,7 @@ TEMPLATES = [
   {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'DIRS': [
-      os.path.join(CLIENT_DIR, 'dist'),
+      CLIENT_DIST_DIR,
     ],
     'APP_DIRS': True,
     'OPTIONS': {
