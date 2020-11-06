@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-class DailAllowance(models.Model):
+class DailyAllowance(models.Model):
   classification = models.OneToOneField(
     Classification,
     on_delete=models.CASCADE
