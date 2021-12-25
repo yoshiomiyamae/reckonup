@@ -3,11 +3,13 @@ import Head from 'next/head'
 import Nav from './navigation';
 
 export interface LayoutProps {
-  children?: JSX.Element | never[],
+  title?: string;
+  children?: JSX.Element | never[];
 };
 
-export const Layout = ({children}: LayoutProps) => <>
+export const Layout = ({ title, children }: LayoutProps) => <>
   <Head>
+    <title>Reckonup{title ? ` - ${title}` : ''}</title>
     <link rel="icon" href="/favicon.ico" />
   </Head>
   <Nav />

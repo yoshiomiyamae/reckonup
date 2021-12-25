@@ -16,6 +16,9 @@ class DailyAllowance(models.Model):
         on_delete=models.PROTECT
     )
 
+    def __str__(self):
+        return f"{self.classification}: {self.value} {self.currency}"
+
 
 class AccommodationFee(models.Model):
     travelExpenseArea = models.ForeignKey(
@@ -35,10 +38,19 @@ class AccommodationFee(models.Model):
         on_delete=models.PROTECT
     )
 
+    def __str__(self):
+        return (
+            f"{self.travelExpenseArea} Class: {self.classification} ... "
+            f"{self.value} {self.currency}"
+        )
+
 
 class TravelExpenseArea(models.Model):
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.name
 
 
 class Expence(models.Model):
@@ -62,6 +74,13 @@ class Expence(models.Model):
         on_delete=models.PROTECT
     )
 
+    def __str__(self):
+        return (
+            f"{self.business_trip} {self.date_time} "
+            f"{self.value} {self.currency} "
+            f"{'Paid' if self.paid else 'Not paid'} "
+        )
+
 
 class BusinessTrip(models.Model):
     user = models.ForeignKey(
@@ -74,6 +93,12 @@ class BusinessTrip(models.Model):
         'Destination',
         on_delete=models.PROTECT
     )
+
+    def __str__(self):
+        return (
+            f"{self.user} {self.start_date_time} ~ {self.end_date_time} "
+            f"{self.destination}"
+        )
 
 
 class Destination(models.Model):
@@ -91,6 +116,9 @@ class Destination(models.Model):
         blank=True,
         null=True
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Receipt(models.Model):
@@ -112,3 +140,6 @@ class ApprovalRoute(models.Model):
         on_delete=models.CASCADE,
         related_name='next_user'
     )
+
+    def __str__(self):
+        return f"{self.user} -> {self.next_user}"

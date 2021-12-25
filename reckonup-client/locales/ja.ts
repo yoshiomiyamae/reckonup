@@ -19,7 +19,7 @@ export default <Dictionary>{
   'signup': 'サインアップ',
 
   // Login page
-  // 'Login': 'Login',
+  // 'Login': 'ログイン',
   'Remember me': 'パスワードを保存',
   'Forgot password?': 'パスワードを忘れました',
 
@@ -29,4 +29,12 @@ export default <Dictionary>{
   'Destination': '行き先',
   'Start date time': '開始日時',
   'End date time': '終了日時',
+
+  // Business trip page
+  'Business trip #{0}': '出張No.{0}',
+  'Edit business trip': '出張の編集',
+  'New business trip': '新規出張',
+  'ID': 'ID',
+  //'Destination': '行き先',
+  'Period': '期間',
 }

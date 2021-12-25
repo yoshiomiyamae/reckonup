@@ -21,6 +21,7 @@ export const List = () => {
   const [destinations, setDestinations] = useState<DestinationCollection>(new DestinationCollection());
   const [hoveredBusinessTripId, setHoveredBusinessTripId] = useState(0);
   const [selectedBusinessTripIds, setSelectedBusinessTripIds] = useState<number[]>([]);
+  const [listContents, setListContents] = useState<JSX.Element[]>([]);
 
   const t = new Translate(router.locale);
 
@@ -41,6 +42,30 @@ export const List = () => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    setListContents(businessTrips.map((businessTrip) => <>
+      <tr
+        className={`is-clickable ${ifBusinessTripHovered(businessTrip.id) ? 'is-selected' : ''}`}
+        key={`businessTrip-${businessTrip.id}`}
+        onMouseOver={() => setHoveredBusinessTripId(businessTrip.id)}
+        onMouseLeave={() => setHoveredBusinessTripId(0)}
+      >
+        <td onClick={() => toggleSelectBusinessTrip(businessTrip.id)}>
+          <input
+            type="checkbox"
+            checked={ifBusinessTripSelected(businessTrip.id)}
+            onChange={(e) => setSelectBusinessTrip(businessTrip.id, e.currentTarget.checked)}
+            placeholder="selected"
+          />
+        </td>
+        <th onClick={() => openBusinesstrip(businessTrip.id)}>{businessTrip.id}</th>
+        <td onClick={() => openBusinesstrip(businessTrip.id)}>{destinations.get(businessTrip.destinationId).name}</td>
+        <td onClick={() => openBusinesstrip(businessTrip.id)}>{businessTrip.startDateTime.toDateString()}</td>
+        <td onClick={() => openBusinesstrip(businessTrip.id)}>{businessTrip.endDateTime.toDateString()}</td>
+      </tr>
+    </>));
+  }, [businessTrips, destinations, selectedBusinessTripIds, hoveredBusinessTripId]);
 
   const openBusinesstrip = (id: number) => {
     if (selectedBusinessTripIds.length > 1 || (selectedBusinessTripIds.length === 1 && selectedBusinessTripIds[0] !== id)) {
@@ -66,7 +91,7 @@ export const List = () => {
   const ifBusinessTripHovered = (id: number) => hoveredBusinessTripId === id;
 
   return <>
-    <Layout>
+    <Layout title={t.t('Travel Expenditure List')}>
       <div className="container">
         <h3 className="title">{t.t('Travel Expenditure List')}</h3>
         <div className="field has-addons">
@@ -120,28 +145,7 @@ export const List = () => {
             </tr>
           </thead>
           <tbody>
-            {businessTrips && destinations
-              ? businessTrips.map((businessTrip, index) => <>
-                <tr
-                  className={`is-clickable ${ifBusinessTripHovered(businessTrip.id) ? 'is-selected' : ''}`}
-                  key={`businessTrip-${businessTrip.id}`}
-                  onMouseOver={() => setHoveredBusinessTripId(businessTrip.id)}
-                  onMouseLeave={() => setHoveredBusinessTripId(0)}
-                >
-                  <td onClick={() => toggleSelectBusinessTrip(businessTrip.id)}>
-                    <input
-                      type="checkbox"
-                      checked={ifBusinessTripSelected(businessTrip.id)}
-                      onChange={(e) => setSelectBusinessTrip(businessTrip.id, e.currentTarget.checked)}
-                    />
-                  </td>
-                  <th onClick={() => openBusinesstrip(businessTrip.id)}>{businessTrip.id}</th>
-                  <td onClick={() => openBusinesstrip(businessTrip.id)}>{destinations.get(businessTrip.destinationId).name}</td>
-                  <td onClick={() => openBusinesstrip(businessTrip.id)}>{businessTrip.startDateTime.toDateString()}</td>
-                  <td onClick={() => openBusinesstrip(businessTrip.id)}>{businessTrip.endDateTime.toDateString()}</td>
-                </tr>
-              </>)
-              : null}
+            {listContents}
           </tbody>
         </table>
       </div>

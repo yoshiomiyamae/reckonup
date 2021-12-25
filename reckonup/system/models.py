@@ -120,6 +120,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
+    def __str__(self):
+        return self.username
+
 
 class Profile(models.Model):
     user = models.OneToOneField(
@@ -135,25 +138,43 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
 
+    def __str__(self):
+        return (
+            f"{self.user} "
+            f"(Class: {self.classification}, Dept.: {self.department})"
+        )
+
 
 class Classification(models.Model):
     name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
 
 
 class Department(models.Model):
     name = models.CharField(max_length=64)
     latitude = models.DecimalField(
         decimal_places=17,
-        max_digits=20
+        max_digits=20,
+        blank=True,
+        null=True
     )
     longitude = models.DecimalField(
         decimal_places=17,
-        max_digits=20
+        max_digits=20,
+        blank=True,
+        null=True
     )
     parent = models.ForeignKey(
         'Department',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Currency(models.Model):
@@ -161,22 +182,35 @@ class Currency(models.Model):
     code = models.CharField(max_length=3)
     code_number = models.IntegerField()
 
+    def __str__(self):
+        return self.name
+
 
 class Country(models.Model):
     name = models.CharField(max_length=64)
     code = models.CharField(max_length=3)
     code2 = models.CharField(max_length=2)
     numeric = models.IntegerField()
-    country_flag = models.ImageField()
+    country_flag = models.ImageField(
+        blank=True,
+        null=True
+    )
     latitude = models.DecimalField(
         decimal_places=17,
-        max_digits=20
+        max_digits=20,
+        blank=True,
+        null=True
     )
     longitude = models.DecimalField(
         decimal_places=17,
-        max_digits=20
+        max_digits=20,
+        blank=True,
+        null=True
     )
     currency = models.ForeignKey(
         Currency,
         on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return self.name

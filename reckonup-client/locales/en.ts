@@ -29,4 +29,12 @@ export default <Dictionary>{
   'Destination': 'Destination',
   'Start date time': 'Start date time',
   'End date time': 'End date time',
+
+  // Business trip page
+  'Business trip #{0}': 'Business trip #{0}',
+  'Edit business trip': 'Edit business trip',
+  'New business trip': 'New business trip',
+  'ID': 'ID',
+  //'Destination': 'Destination',
+  'Period': 'Period',
 }

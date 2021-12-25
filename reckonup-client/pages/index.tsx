@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { format } from 'react-string-format';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IsLoggedInState, JwtTokenState, RefreshTokenState, UserState } from '../common/atom';
@@ -15,6 +15,8 @@ export const Home = () => {
   const refreshToken = useRecoilValue(RefreshTokenState);
   const setUser = useSetRecoilState(UserState);
 
+  const [contents, setContents] = useState(<></>);
+
   const t = new Translate(locale);
 
   useEffect(() => {
@@ -24,29 +26,35 @@ export const Home = () => {
         setUser(response.user);
       }
     })();
-  });
-  return <>
-    <Layout>
-      {isLoggedIn
-        ? <>
-          <div className="hero is-link">
-            <div className="hero-body">
-              <div className="title">
-                {t.t('Travel Expenditure Management System')}
-              </div>
-              <div className="subtitle">
-                {t.t('Reckonup is ....')}
-              </div>
+  }, []);
+  useEffect(() => {
+    if (isLoggedIn) {
+      setContents(<>
+        <div className="hero is-link">
+          <div className="hero-body">
+            <div className="title">
+              {t.t('Travel Expenditure Management System')}
+            </div>
+            <div className="subtitle">
+              {t.t('Reckonup is ....')}
             </div>
           </div>
-        </>
-        : <>
+        </div>
+      </>);
+    } else {
+      setContents(<>
+        <div className="container">
           {format(t.t('You need to {0} or {1}.'),
             <Link href="/login"><a>{t.t('login')}</a></Link>,
             <Link href="/signup"><a>{t.t('signup')}</a></Link>
           )}
-        </>
-      }
+        </div>
+      </>);
+    }
+  }, [isLoggedIn]);
+  return <>
+    <Layout>
+      {contents}
     </Layout>
   </>;
 }

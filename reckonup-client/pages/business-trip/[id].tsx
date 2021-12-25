@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
+import { format } from "react-string-format";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import DateRangePicker from 'rsuite/DateRangePicker';
@@ -56,16 +57,16 @@ export const BusinessTripPage = () => {
     });
   };
   return <>
-    <Layout>
+    <Layout title={format(t.t('Business trip #{0}'), businessTrip.id)}>
       <div className="container">
         {businessTrip && destinations
           ? <>
             {businessTrip.id !== 0
               ? <>
-                <h3 className="title">Edit business trip</h3>
+                <h3 className="title">{t.t('Edit business trip')}</h3>
               </>
               : <>
-                <h3 className="title">New business trip</h3>
+                <h3 className="title">{t.t('New business trip')}</h3>
               </>
             }
             <div className="field">
@@ -73,7 +74,7 @@ export const BusinessTripPage = () => {
                 ? <>
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
-                      <label className="label">ID</label>
+                      <label className="label">{t.t('ID')}</label>
                     </div>
                     <div className="field-body">
                       <div className="field">
@@ -81,7 +82,7 @@ export const BusinessTripPage = () => {
                           <input
                             className="input"
                             type="text"
-                            placeholder="ID"
+                            placeholder={t.t('ID')}
                             value={businessTrip.id || ''}
                             readOnly
                           />
@@ -94,7 +95,7 @@ export const BusinessTripPage = () => {
               }
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
-                  <label className="label">Destination</label>
+                  <label className="label">{t.t('Destination')}</label>
                 </div>
                 <div className="field-body">
                   <div className="field">
@@ -126,7 +127,7 @@ export const BusinessTripPage = () => {
               </div>
               <div className="field is-horizontal">
                 <div className="field-label is-normal">
-                  <label className="label">Period</label>
+                  <label className="label">{t.t('Period')}</label>
                 </div>
                 <div className="field-body">
                   <div className="field">

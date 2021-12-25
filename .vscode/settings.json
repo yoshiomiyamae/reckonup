@@ -10,6 +10,9 @@
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
   "python.jediEnabled": false,
-"python.linting.mypyEnabled": true,
-"python.languageServer": "None"
+  "python.linting.mypyEnabled": true,
+  "python.languageServer": "None",
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }

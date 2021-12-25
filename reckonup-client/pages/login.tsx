@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { IsLoggedInState, JwtTokenState, RefreshTokenState, UserState } from '../common/atom';
 import { login } from '../common/auth';
@@ -23,9 +23,26 @@ export const Login = () => {
 
   const t = new Translate(router.locale);
 
-  if (isLoginChecked) {
-    router.replace('/');
-  }
+  useEffect(() => {
+    if (isLoginChecked) {
+      router.replace('/');
+    }
+  }, [isLoginChecked]);
+
+  const onLoginButtonClicked = async () => {
+    const response = await login(
+      userName,
+      password
+    );
+    setLoginErrorMessage(response.loginErrorMessage);
+    if (response.isLoggedIn) {
+      setIsLoggedIn(response.isLoggedIn);
+      setJwtToken(response.jwtToken);
+      setRefreshToken(response.refreshToken);
+      setUser(response.user);
+      setIsLoginChecked(true);
+    }
+  };
 
   return <>
     <Layout>
@@ -76,21 +93,7 @@ export const Login = () => {
             <div className="card-footer-item">
               <button
                 className="button is-primary"
-                onClick={async () => {
-                  const response = await login(
-                    userName,
-                    password
-                  );
-                  console.log(response);
-                  setLoginErrorMessage(response.loginErrorMessage);
-                  if (response.isLoggedIn) {
-                    setIsLoggedIn(response.isLoggedIn);
-                    setJwtToken(response.jwtToken);
-                    setRefreshToken(response.refreshToken);
-                    setUser(response.user);
-                    setIsLoginChecked(true);
-                  }
-                }}
+                onClick={onLoginButtonClicked}
               >
                 {t.t('Login')}
               </button>
