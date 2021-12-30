@@ -1,21 +1,18 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { IsLoggedInState, JwtTokenState, RefreshTokenState, UserState } from "../common/atom";
-import { loginCheck } from "../common/auth";
+import { useRecoilValue } from "recoil";
+import { IsLoggedInState } from "../common/atom";
 import { Layout } from "../component/layout";
 import { Translate } from "../locales";
 import { getBusinessTrips, getDestinations } from "../logics/travel-expense";
 import { BusinessTripCollection, DestinationCollection } from "../models/travel-expense";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCheck, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
+import LoginCheck from "../component/login-check";
 
 export const List = () => {
   const router = useRouter();
   const isLoggedIn = useRecoilValue(IsLoggedInState);
-  const jwtToken = useRecoilValue(JwtTokenState);
-  const refreshToken = useRecoilValue(RefreshTokenState);
-  const setUser = useSetRecoilState(UserState);
 
   const [businessTrips, setBusinessTrips] = useState<BusinessTripCollection>(new BusinessTripCollection());
   const [destinations, setDestinations] = useState<DestinationCollection>(new DestinationCollection());
@@ -25,23 +22,13 @@ export const List = () => {
 
   const t = new Translate(router.locale);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        if (isLoggedIn) {
-          const response = await loginCheck(jwtToken, refreshToken);
-          setUser(response.user);
-        }
-        setBusinessTrips(await getBusinessTrips());
-        setDestinations(await getDestinations());
-      }
-      catch (e) {
-        if (e.isAxiosError && Math.floor(e.response.status / 400) === 1) {
-          router.replace('/login');
-        }
-      }
-    })();
-  }, []);
+  const onLoginOk = async () => {
+    if (!isLoggedIn) {
+      return;
+    }
+    setBusinessTrips(await getBusinessTrips());
+    setDestinations(await getDestinations());
+  };
 
   useEffect(() => {
     setListContents(businessTrips.map((businessTrip) => <>
@@ -91,65 +78,67 @@ export const List = () => {
   const ifBusinessTripHovered = (id: number) => hoveredBusinessTripId === id;
 
   return <>
-    <Layout title={t.t('Travel Expenditure List')}>
-      <div className="container">
-        <h3 className="title">{t.t('Travel Expenditure List')}</h3>
-        <div className="field has-addons">
-          <div className="control">
-            <button
-              className="button"
-              onClick={() => openBusinesstrip(0)}
-            >
-              <span className="icon is-small">
-                <FontAwesomeIcon icon={faPlus} />
-              </span>
-              <span>Add</span>
-            </button>
-          </div>
-          <div className="control">
-            <button
-              className="button"
-              disabled={selectedBusinessTripIds.length !== 1}
-              onClick={() => openBusinesstrip(selectedBusinessTripIds[0])}
-            >
-              <span className="icon is-small">
-                <FontAwesomeIcon icon={faPencilAlt} />
-              </span>
-              <span>Edit</span>
-            </button>
-          </div>
-          <div className="control">
-            <button
-              className="button"
-              disabled={selectedBusinessTripIds.length === 0}
-            >
-              <span className="icon is-small">
-                <FontAwesomeIcon icon={faTrash} />
-              </span>
-              <span>Remove</span>
-            </button>
-          </div>
-        </div>
-        <table className="table is-fullwidth is-striped">
-          <thead>
-            <tr>
-              <th>
+    <LoginCheck onLoginOk={onLoginOk}>
+      <Layout title={t.t('Travel Expenditure List')}>
+        <div className="container">
+          <h3 className="title">{t.t('Travel Expenditure List')}</h3>
+          <div className="field has-addons">
+            <div className="control">
+              <button
+                className="button"
+                onClick={() => openBusinesstrip(0)}
+              >
                 <span className="icon is-small">
-                  <FontAwesomeIcon icon={faCheck} />
+                  <FontAwesomeIcon icon={faPlus} />
                 </span>
-              </th>
-              <th>{t.t('#')}</th>
-              <th>{t.t('Destination')}</th>
-              <th>{t.t('Start date time')}</th>
-              <th>{t.t('End date time')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {listContents}
-          </tbody>
-        </table>
-      </div>
-    </Layout>
+                <span>Add</span>
+              </button>
+            </div>
+            <div className="control">
+              <button
+                className="button"
+                disabled={selectedBusinessTripIds.length !== 1}
+                onClick={() => openBusinesstrip(selectedBusinessTripIds[0])}
+              >
+                <span className="icon is-small">
+                  <FontAwesomeIcon icon={faPencilAlt} />
+                </span>
+                <span>Edit</span>
+              </button>
+            </div>
+            <div className="control">
+              <button
+                className="button"
+                disabled={selectedBusinessTripIds.length === 0}
+              >
+                <span className="icon is-small">
+                  <FontAwesomeIcon icon={faTrash} />
+                </span>
+                <span>Remove</span>
+              </button>
+            </div>
+          </div>
+          <table className="table is-fullwidth is-striped">
+            <thead>
+              <tr>
+                <th>
+                  <span className="icon is-small">
+                    <FontAwesomeIcon icon={faCheck} />
+                  </span>
+                </th>
+                <th>{t.t('#')}</th>
+                <th>{t.t('Destination')}</th>
+                <th>{t.t('Start date time')}</th>
+                <th>{t.t('End date time')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {listContents}
+            </tbody>
+          </table>
+        </div>
+      </Layout>
+    </LoginCheck>
   </>;
 };
 

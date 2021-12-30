@@ -5,6 +5,9 @@ export default <Dictionary>{
   'NAME_ORDER': '{0} {1}',
   'LONG_DATE_TIME_FORMAT': 'eeee, MMMM dd, yyyy hh:mm:ss aa',
 
+  // Loading
+  'Loading...': 'Loading...',
+
   // Navigation
   'List': 'List',
   'Logout': 'Logout',

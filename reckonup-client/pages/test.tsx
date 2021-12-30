@@ -1,8 +1,9 @@
 import Layout from '../component/layout'
+import Loading from '../component/loading';
 
 export const Test = () => <>
   <Layout>
-    <div>test</div>
+    <Loading />
   </Layout>
 </>;
 

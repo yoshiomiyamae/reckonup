@@ -13,10 +13,6 @@ export interface LoginResponse {
   loginErrorMessage?: string;
 }
 
-export interface JwtTokenRefreshResponse {
-  jwtToken?: string;
-}
-
 interface JwtData {
   exp: number;
   iat: number;
@@ -27,8 +23,8 @@ interface JwtData {
 
 export const loginCheck = async (jwtToken: string, refreshToken: string) => {
   const jwtData = jwt.decode(jwtToken) as JwtData;
-  if (jwtData.exp <= new Date().getTime() / 1000) {
-    await jwtTokenRefresh(refreshToken);
+  if (!jwtData || jwtData.exp <= new Date().getTime() / 1000) {
+    jwtToken = await jwtTokenRefresh(refreshToken);
   } else {
     axios.defaults.headers.common.Authorization = `JWT ${jwtToken}`;
   }
@@ -41,15 +37,13 @@ export const loginCheck = async (jwtToken: string, refreshToken: string) => {
   };
 };
 
-export const jwtTokenRefresh = async (refreshToken: string): Promise<JwtTokenRefreshResponse> => {
+export const jwtTokenRefresh = async (refreshToken: string): Promise<string> => {
   const response = await axios.post(`${SERVER_SETTINGS.getUrl()}/api-auth/refresh/`, {
     refresh: refreshToken,
   });
   const jwtToken = response.data.access;
   axios.defaults.headers.common.Authorization = `JWT ${jwtToken}`;
-  return {
-    jwtToken,
-  };
+  return jwtToken;
 };
 
 export const login = async (userName: string, password: string): Promise<LoginResponse> => {

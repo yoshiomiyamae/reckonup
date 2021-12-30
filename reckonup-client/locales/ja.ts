@@ -5,6 +5,9 @@ export default <Dictionary>{
   'NAME_ORDER': '{1} {0}',
   'LONG_DATE_TIME_FORMAT': 'yyyy年MM月dd日 HH時mm分ss秒',
 
+  // Loading
+  'Loading...': '読込中...',
+
   // Navigation
   'List': 'リスト',
   'Logout': 'ログアウト',

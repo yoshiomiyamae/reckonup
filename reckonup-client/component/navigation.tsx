@@ -6,11 +6,12 @@ import { useRouter } from 'next/router';
 import { format } from 'react-string-format';
 
 import { clearAuthenticationInformation } from '../common/auth';
-import { IsLoggedInState, JwtTokenState, UserState } from '../common/atom';
+import { IsLoggedInState, JwtTokenState, RefreshTokenState, UserState } from '../common/atom';
 import { User } from '../models/user';
 import { Translate } from '../locales';
 
 import styles from '../styles/navigation.module.scss';
+import Nothing from './nothing';
 
 
 const md5 = (data: string | undefined | null) =>
@@ -20,17 +21,19 @@ export const Nav = () => {
   const { locale } = useRouter();
   const [isBurgerActive, setIsBurgerActive] = useState(false);
   const [isUserMenuOpened, setIsUesrMenuOpened] = useState(false);
-  const [menu, setMenu] = useState(<></>);
+  const [menu, setMenu] = useState(<Nothing />);
 
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedInState);
   const [user, setUser] = useRecoilState<User>(UserState);
   const setJwtToken = useSetRecoilState(JwtTokenState);
+  const setRefreshToken = useSetRecoilState(RefreshTokenState);
 
   const t = new Translate(locale);
 
   const logout = () => {
     clearAuthenticationInformation();
     setJwtToken('');
+    setRefreshToken('');
     setIsLoggedIn(false);
     setUser(null);
   };
