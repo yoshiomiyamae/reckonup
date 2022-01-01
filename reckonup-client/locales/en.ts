@@ -4,15 +4,20 @@ export default <Dictionary>{
   // General
   'NAME_ORDER': '{0} {1}',
   'LONG_DATE_TIME_FORMAT': 'eeee, MMMM dd, yyyy hh:mm:ss aa',
+  'SHORT_DATE_TIME_FORMAT': 'MMM-dd, yyyy h:mm aa',
 
   // Loading
   'Loading...': 'Loading...',
+
+  // Login check page
+  'Certification information has expired. Need re-login.': 'Certification information has expired. Need re-login.',
 
   // Navigation
   'List': 'List',
   'Logout': 'Logout',
   'Signup': 'Signup',
   'Login': 'Login',
+  'Profile': 'Profile',
 
   // Index page
   'Travel Expenditure Management System': 'Travel Expenditure Management System',
@@ -23,6 +28,8 @@ export default <Dictionary>{
 
   // Login page
   // 'Login': 'Login',
+  'User name': 'User name',
+  'Password': 'Password',
   'Remember me': 'Remember me',
   'Forgot password?': 'Forgot password?',
 
@@ -32,6 +39,14 @@ export default <Dictionary>{
   'Destination': 'Destination',
   'Start date time': 'Start date time',
   'End date time': 'End date time',
+  'Add': 'Add',
+  'Edit': 'Edit',
+  'Delete': 'Delete',
+  'close': 'close',
+  'You are trying to delete business trips': 'You are trying to delete business trips',
+  'Are you sure to delete the following business trips?:': 'Are you sure to delete the following business trips?:',
+  'Yes, I am sure.': 'Yes, I am sure.',
+  'No': 'No',
 
   // Business trip page
   'Business trip #{0}': 'Business trip #{0}',
@@ -40,4 +55,16 @@ export default <Dictionary>{
   'ID': 'ID',
   //'Destination': 'Destination',
   'Period': 'Period',
+  'Save': 'Save',
+  'Cancel': 'Cancel',
+  'Saved!': 'Saved!',
+
+  // Profile page
+  'Edit profile': 'Edit profile',
+  'First name': 'First name',
+  'Last name': 'Last name',
+  'E-mail': 'E-mail',
+  'Active': 'Active',
+  // 'Save': 'Save',
+  // 'Cancel': 'Cancel',
 }

@@ -28,7 +28,10 @@ def create_viewset(models_module):
                 if field.name not in HIDDEN_FIELDS
             ] + [
                 x.related_name for x in c()._meta.related_objects
-                if x.related_name is not None
+                if (
+                    x.related_name is not None and
+                    x.remote_field.related_model == x.related_model
+                )
             ] + [
                 key for key, value in vars(c).items()
                 if isinstance(value, property)

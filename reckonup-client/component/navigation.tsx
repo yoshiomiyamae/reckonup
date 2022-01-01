@@ -5,7 +5,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { format } from 'react-string-format';
 
-import { clearAuthenticationInformation } from '../common/auth';
+import { clearAuthenticationInformation } from '../logics/auth';
 import { IsLoggedInState, JwtTokenState, RefreshTokenState, UserState } from '../common/atom';
 import { User } from '../models/user';
 import { Translate } from '../locales';
@@ -17,7 +17,11 @@ import Nothing from './nothing';
 const md5 = (data: string | undefined | null) =>
   data && crypto.createHash("md5").update(data).digest("hex");
 
-export const Nav = () => {
+export interface NavigationProps {
+  navigation?: string;
+};
+
+export const Navigation = ({ navigation }: NavigationProps) => {
   const { locale } = useRouter();
   const [isBurgerActive, setIsBurgerActive] = useState(false);
   const [isUserMenuOpened, setIsUesrMenuOpened] = useState(false);
@@ -45,7 +49,7 @@ export const Nav = () => {
         {/* Logged in */}
         <div className="navbar-start">
           <Link href="/list">
-            <a key="navbar-social-menu-1" className="navbar-item">
+            <a key="navbar-social-menu-1" className={`navbar-item is-tab ${navigation === 'list' ? 'is-active' : ''}`}>
               {t.t('List')}
             </a>
           </Link>
@@ -63,6 +67,11 @@ export const Nav = () => {
               {format(t.t('NAME_ORDER'), user.firstName, user.lastName)}
             </a>
             <div className="navbar-dropdown">
+              <Link href="/profile">
+                <a className="navbar-item">
+                  {t.t('Profile')}
+                </a>
+              </Link>
               <Link href="/login">
                 <a className="navbar-item" onClick={() => logout()}>
                   {t.t('Logout')}
@@ -122,4 +131,4 @@ export const Nav = () => {
   </>;
 }
 
-export default Nav;
+export default Navigation;

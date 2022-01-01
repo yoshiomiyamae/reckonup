@@ -2,12 +2,13 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IsLoggedInState, JwtTokenState, RefreshTokenState, UserState } from '../common/atom';
-import { loginCheck } from '../common/auth';
+import { loginCheck } from '../logics/auth';
+import { Translate } from '../locales';
 import Loading from './loading';
 
 export interface LoginCheckProps {
   children?: JSX.Element;
-  onLoginOk?: () => Promise<void>;
+  onLoginOk?: () => void;
 };
 
 export const LoginCheck = ({ children, onLoginOk }: LoginCheckProps) => {
@@ -18,6 +19,8 @@ export const LoginCheck = ({ children, onLoginOk }: LoginCheckProps) => {
   const setUser = useSetRecoilState(UserState);
 
   const [isLoginChecked, setIsLoginChecked] = useState(false);
+
+  const t = new Translate(router.locale);
 
   useEffect(() => {
     (async () => {
@@ -32,10 +35,16 @@ export const LoginCheck = ({ children, onLoginOk }: LoginCheckProps) => {
         if (onLoginOk === null) {
           return;
         }
-        await onLoginOk();
+        onLoginOk();
       }
       catch (e) {
         if (e.isAxiosError && Math.floor(e.response.status / 400) === 1) {
+
+          if (process.browser) {
+            // Dynamic import to avoid SSR
+            const { immediateToast } = await import('izitoast-react');
+            immediateToast('error', { message: t.t('Certification information has expired. Need re-login.') });
+          }
           router.replace(`/login?url=${router.asPath}`);
         }
       }

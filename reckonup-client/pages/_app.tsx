@@ -3,6 +3,7 @@ import { RecoilRoot } from 'recoil';
 import DebugObserver from '../component/debug-observer';
 
 import 'rsuite/dist/rsuite.min.css';
+import 'izitoast-react/dist/iziToast.css';
 
 import '../styles/globals.scss';
 

@@ -26,6 +26,7 @@ class AuthenticationInformationView(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
+        profile = models.Profile.objects.get(user=self.request.user.id)
         return Response(data={
             'id': request.user.id,
             'last_login': request.user.last_login,
@@ -34,6 +35,11 @@ class AuthenticationInformationView(generics.RetrieveAPIView):
             'last_name': request.user.last_name,
             'email': request.user.email,
             'is_active': request.user.is_active,
+            'is_staff': request.user.is_staff,
+            'is_superuser': request.user.is_superuser,
+            'date_joined': request.user.date_joined,
+            'classification_id': profile.classification.id,
+            'department_id':  profile.department.id,
         }, status=status.HTTP_200_OK)
 
 

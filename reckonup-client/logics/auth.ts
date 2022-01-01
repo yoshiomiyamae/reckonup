@@ -1,25 +1,11 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import { Jwt, LoginResponse } from "../models/auth";
 
-import { User } from "../models/user";
-import { SERVER_SETTINGS } from "./config";
+import { User, UserResponse } from "../models/system";
+import { JwtData } from "../models/auth";
+import { SERVER_SETTINGS } from "../common/config";
 
-
-export interface LoginResponse {
-  isLoggedIn: boolean;
-  jwtToken?: string;
-  refreshToken?: string;
-  user?: User;
-  loginErrorMessage?: string;
-}
-
-interface JwtData {
-  exp: number;
-  iat: number;
-  jti: string;
-  token_type: 'access' | 'refresh';
-  user_id: number;
-}
 
 export const loginCheck = async (jwtToken: string, refreshToken: string) => {
   const jwtData = jwt.decode(jwtToken) as JwtData;
@@ -38,7 +24,7 @@ export const loginCheck = async (jwtToken: string, refreshToken: string) => {
 };
 
 export const jwtTokenRefresh = async (refreshToken: string): Promise<string> => {
-  const response = await axios.post(`${SERVER_SETTINGS.getUrl()}/api-auth/refresh/`, {
+  const response = await axios.post<Jwt>(`${SERVER_SETTINGS.getUrl()}/api-auth/refresh/`, {
     refresh: refreshToken,
   });
   const jwtToken = response.data.access;
@@ -75,18 +61,10 @@ export const login = async (userName: string, password: string): Promise<LoginRe
 
 export const checkAuthenticationInformation = async (): Promise<LoginResponse> => {
   try {
-    const response = await axios.get(`${SERVER_SETTINGS.getUrl()}/api/system/authentication_information`);
+    const response = await axios.get<UserResponse>(`${SERVER_SETTINGS.getUrl()}/api/system/authentication_information`);
     return {
       isLoggedIn: true,
-      user: {
-        id: response.data.id,
-        isActive: response.data.is_active,
-        lastLogin: response.data.last_login,
-        userName: response.data.username,
-        firstName: response.data.first_name,
-        lastName: response.data.last_name,
-        email: response.data.email,
-      },
+      user: User.fromUserResponse(response.data),
       loginErrorMessage: '',
     };
   }

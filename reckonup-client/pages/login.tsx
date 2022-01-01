@@ -1,19 +1,22 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { IsLoggedInState, JwtTokenState, RefreshTokenState, UserState } from '../common/atom';
-import { login } from '../common/auth';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { IsLoggedInState, JwtTokenState, PasswordState, RefreshTokenState, RememberMeState, UserNameState, UserState } from '../common/atom';
+import { login } from '../logics/auth';
 import Layout from '../component/layout'
 import Nothing from '../component/nothing';
 import { Translate } from '../locales';
-import { User } from '../models/user';
+import { User } from '../models/system';
 
 export const Login = () => {
   const router = useRouter();
-  const [userName, setUserName] = useState<string>('');
-  const [password, setPassword] = useState('');
+  const [persistentUserName, setPersistentUserName] = useRecoilState(UserNameState);
+  const [persistentPassword, setPersistentPassword] = useRecoilState(PasswordState);
+  // const [rememberMe, setRememberMe] = useRecoilState(RememberMeState);
   const [rememberMe, setRememberMe] = useState(false);
+  const [userName, setUserName] = useState(rememberMe ? persistentUserName : '');
+  const [password, setPassword] = useState(rememberMe ? persistentPassword : '');
   const [isLoginChecked, setIsLoginChecked] = useState(false);
   const [loginErrorMessage, setLoginErrorMessage] = useState('');
 
@@ -41,6 +44,13 @@ export const Login = () => {
     );
     setLoginErrorMessage(response.loginErrorMessage);
     if (response.isLoggedIn) {
+      if (rememberMe) {
+        setPersistentUserName(userName);
+        setPersistentPassword(password);
+      } else {
+        setPersistentUserName('');
+        setPersistentPassword('');
+      }
       setIsLoggedIn(response.isLoggedIn);
       setJwtToken(response.jwtToken);
       setRefreshToken(response.refreshToken);
@@ -59,35 +69,61 @@ export const Login = () => {
             </div>
             <div className="card-content">
               <div className="field">
-                <div className="control">
-                  <input
-                    className="input"
-                    type="text"
-                    placeholder={t.t('Username')}
-                    value={userName}
-                    onInput={(e) => setUserName(e.currentTarget.value)}
-                  />
+                <div className="field is-horizontal">
+                  <div className="field-label is-normal">
+                    <label className="label">{t.t('User name')}</label>
+                  </div>
+                  <div className="field-body">
+                    <div className="field">
+                      <p className="control">
+                        <input
+                          className="input"
+                          type="text"
+                          placeholder={t.t('User name')}
+                          value={userName}
+                          onInput={(e) => setUserName(e.currentTarget.value)}
+                        />
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="control">
-                  <input
-                    className="input"
-                    type="password"
-                    placeholder={t.t('Password')}
-                    value={password}
-                    onInput={(e) => setPassword(e.currentTarget.value)}
-                  />
+                <div className="field is-horizontal">
+                  <div className="field-label is-normal">
+                    <label className="label">{t.t('Password')}</label>
+                  </div>
+                  <div className="field-body">
+                    <div className="field">
+                      <p className="control">
+                        <input
+                          className="input"
+                          type="password"
+                          placeholder={t.t('Password')}
+                          value={password}
+                          onInput={(e) => setPassword(e.currentTarget.value)}
+                        />
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="control">
-                  <label className="checkbox">
-                    <input
-                      className="checkbox"
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.currentTarget.checked)}
-                    />
-                    {t.t('Remember me')}
-                  </label>
-                </div>
+                {/* <div className="field is-horizontal">
+                  <div className="field-label">
+                    <label className="label">{t.t('Remember me')}</label>
+                  </div>
+                  <div className="field-body">
+                    <div className="field is-narrow">
+                      <div className="control">
+                        <label className="checkbox">
+                          <input
+                            className="checkbox"
+                            type="checkbox"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.currentTarget.checked)}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div> */}
               </div>
               {loginErrorMessage
                 ? <div className="notification is-danger">
