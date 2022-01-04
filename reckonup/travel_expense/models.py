@@ -47,16 +47,17 @@ class AccommodationFee(models.Model):
 
 class TravelExpenseArea(models.Model):
     name = models.CharField(max_length=64)
-    description = models.CharField(max_length=256)
+    description = models.CharField(max_length=256, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 
-class Expence(models.Model):
+class Expense(models.Model):
     business_trip = models.ForeignKey(
         'BusinessTrip',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='expenses'
     )
     date_time = models.DateTimeField()
     value = models.DecimalField(
@@ -68,10 +69,12 @@ class Expence(models.Model):
         on_delete=models.PROTECT
     )
     paid = models.BooleanField()
-    remarks = models.CharField(max_length=256)
+    remarks = models.CharField(max_length=256, blank=True, null=True)
     receipt = models.ForeignKey(
         'Receipt',
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True
     )
 
     def __str__(self):

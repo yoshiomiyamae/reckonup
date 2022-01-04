@@ -2,15 +2,19 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Layout } from "../component/layout";
 import { Translate } from "../locales";
-import { getBusinessTrips, getDestinations } from "../logics/travel-expense";
+import { deleteBusinessTrip, getBusinessTrips, getDestinations } from "../logics/travel-expense";
 import { BusinessTripCollection, DestinationCollection } from "../models/travel-expense";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCheck, faPencilAlt, faTrash, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import LoginCheck from "../component/login-check";
 import * as dateFns from 'date-fns';
+import { useRecoilValue } from "recoil";
+import { UserState } from "../common/atom";
 
 export const List = () => {
   const router = useRouter();
+
+  const user = useRecoilValue(UserState);
 
   const [businessTrips, setBusinessTrips] = useState<BusinessTripCollection>(new BusinessTripCollection());
   const [destinations, setDestinations] = useState<DestinationCollection>(new DestinationCollection());
@@ -26,7 +30,7 @@ export const List = () => {
     if (!isLoginOk) {
       return;
     }
-    setBusinessTrips(await getBusinessTrips());
+    setBusinessTrips(await getBusinessTrips(user.id));
     setDestinations(await getDestinations());
     setSelectedBusinessTripIds([]);
   }
@@ -68,9 +72,9 @@ export const List = () => {
   };
 
   const onDeleteButtonClicked = async () => {
-    setIsDeleteConfirmationModalOpen(true);
-    // await Promise.all(selectedBusinessTripIds.map(id => deleteBusinessTrip(id)));
-    // await loadData();
+    await Promise.all(selectedBusinessTripIds.map(id => deleteBusinessTrip(user.id, id)));
+    await loadData();
+    setIsDeleteConfirmationModalOpen(false);
   }
 
   const setSelectBusinessTrip = (id: number, checked: boolean) => {
@@ -92,7 +96,7 @@ export const List = () => {
     <LoginCheck onLoginOk={() => setIsLoginOk(true)}>
       <Layout title={t.t('Travel Expenditure List')} navigation="list">
         <div className="container">
-          <h3 className="title">{t.t('Travel Expenditure List')}</h3>
+          <h3 className="title is-3">{t.t('Travel Expenditure List')}</h3>
           <div className="field buttons has-addons">
             <div className="control">
               <button
@@ -173,7 +177,12 @@ export const List = () => {
               </ul>
             </section>
             <footer className="modal-card-foot buttons is-right">
-              <button className="button is-danger">{t.t('Yes, I am sure.')}</button>
+              <button
+                className="button is-danger"
+                onClick={() => onDeleteButtonClicked()}
+              >
+                {t.t('Yes, I am sure.')}
+              </button>
               <button
                 className="button"
                 onClick={() => setIsDeleteConfirmationModalOpen(false)}

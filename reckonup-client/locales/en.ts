@@ -60,11 +60,22 @@ export default <Dictionary>{
   'Saved!': 'Saved!',
 
   // Profile page
-  'Edit profile': 'Edit profile',
+  'Edit profile': 'Edit profiletexttext',
   'First name': 'First name',
   'Last name': 'Last name',
   'E-mail': 'E-mail',
   'Active': 'Active',
+  'Super user': 'Super user',
+  'Staff': 'Staff',
+  'Classification': 'Classification',
+  'Department': 'Department',
+  'Last login': 'Last login',
+  'Date joined': 'Date joined',
   // 'Save': 'Save',
   // 'Cancel': 'Cancel',
+
+  // Change password page
+  'Change password': 'Change password',
+  'New password': 'New password',
+  'New password (confirm)': 'New password (confirm)',
 }

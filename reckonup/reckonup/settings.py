@@ -45,6 +45,7 @@ USER_APPLICATIONS = [
         recursive=False,
         include_hidden=False
     )
+
     if directory_name not in [PROJECT_NAME, 'data', ]
 ]
 

@@ -1,13 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 import { SERVER_SETTINGS } from "../common/config";
 import {
-  Classification,
+  ChangePasswordResponse,
   ClassificationCollection,
-  ClassificationResponse,
   ClassificationResponseCollection,
-  Department,
   DepartmentCollection,
-  DepartmentResponse,
   User,
   UserResponse
 } from "../models/system";
@@ -18,36 +15,6 @@ export const getUser = async (id: number) => {
       `${SERVER_SETTINGS.getUrl()}/api/system/user/${id}/`
     );
     return User.fromUserResponse(response.data);
-  }
-  catch (e) {
-    console.error(e.response.data.error);
-  }
-}
-
-export const putUser = async (user: User) => {
-  try {
-    if (user.id) {
-      await axios.put<any, AxiosResponse, UserResponse>(
-        `${SERVER_SETTINGS.getUrl()}/api/system/user/${user.id}/`,
-        {
-          id: user.id,
-          is_active: user.isActive,
-          username: user.userName,
-          first_name: user.firstName,
-          last_name: user.lastName,
-          email: user.email,
-        });
-    } else {
-      await axios.post<any, AxiosResponse, UserResponse>(
-        `${SERVER_SETTINGS.getUrl()}/api/system/user/`,
-        {
-          is_active: user.isActive,
-          username: user.userName,
-          first_name: user.firstName,
-          last_name: user.lastName,
-          email: user.email,
-        });
-    }
   }
   catch (e) {
     console.error(e.response.data.error);
@@ -77,3 +44,11 @@ export const getDepartments = async () => {
     console.error(e.response.data.error);
   }
 };
+
+export const changePassword = async (newPassword: string) => {
+  await axios.put<any, AxiosResponse, ChangePasswordResponse>(
+    `${SERVER_SETTINGS.getUrl()}/api/system/change_password`,
+    {
+      new_password: newPassword
+    });
+}

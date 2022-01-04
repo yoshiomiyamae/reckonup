@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import jwt from "jsonwebtoken";
 import { Jwt, LoginResponse } from "../models/auth";
 
@@ -14,7 +14,7 @@ export const loginCheck = async (jwtToken: string, refreshToken: string) => {
   } else {
     axios.defaults.headers.common.Authorization = `JWT ${jwtToken}`;
   }
-  const { isLoggedIn, user, loginErrorMessage } = await checkAuthenticationInformation();
+  const { isLoggedIn, user, loginErrorMessage } = await checkLoginUser();
   return {
     isLoggedIn,
     jwtToken,
@@ -41,7 +41,7 @@ export const login = async (userName: string, password: string): Promise<LoginRe
     const jwtToken = response.data.access;
     const refreshToken = response.data.refresh;
     axios.defaults.headers.common.Authorization = `JWT ${jwtToken}`;
-    const { isLoggedIn, user, loginErrorMessage } = await checkAuthenticationInformation();
+    const { isLoggedIn, user, loginErrorMessage } = await checkLoginUser();
     return {
       isLoggedIn,
       jwtToken,
@@ -51,7 +51,7 @@ export const login = async (userName: string, password: string): Promise<LoginRe
     };
   } catch (e) {
     console.log(e);
-    clearAuthenticationInformation();
+    clearLoginUser();
     return {
       isLoggedIn: false,
       loginErrorMessage: e.message,
@@ -59,9 +59,9 @@ export const login = async (userName: string, password: string): Promise<LoginRe
   }
 };
 
-export const checkAuthenticationInformation = async (): Promise<LoginResponse> => {
+export const checkLoginUser = async (): Promise<LoginResponse> => {
   try {
-    const response = await axios.get<UserResponse>(`${SERVER_SETTINGS.getUrl()}/api/system/authentication_information`);
+    const response = await axios.get<UserResponse>(`${SERVER_SETTINGS.getUrl()}/api/system/login_user`);
     return {
       isLoggedIn: true,
       user: User.fromUserResponse(response.data),
@@ -70,13 +70,45 @@ export const checkAuthenticationInformation = async (): Promise<LoginResponse> =
   }
   catch (e) {
     console.log(e);
-    clearAuthenticationInformation();
+    clearLoginUser();
     return {
       isLoggedIn: false,
       loginErrorMessage: e.message,
     };
   }
 };
-export const clearAuthenticationInformation = () => {
+export const clearLoginUser = () => {
   delete axios.defaults.headers.common["Authorization"];
 };
+
+export const updateLoginUser = async (user: User) => {
+  try {
+    if (user.id) {
+      await axios.put<any, AxiosResponse, UserResponse>(
+        `${SERVER_SETTINGS.getUrl()}/api/system/login_user`,
+        {
+          id: user.id,
+          is_active: user.isActive,
+          username: user.userName,
+          first_name: user.firstName,
+          last_name: user.lastName,
+          email: user.email,
+          classification_id: user.classificationId,
+          department_id: user.departmentId,
+        });
+    } else {
+      await axios.post<any, AxiosResponse, UserResponse>(
+        `${SERVER_SETTINGS.getUrl()}/api/system/login_user`,
+        {
+          is_active: user.isActive,
+          username: user.userName,
+          first_name: user.firstName,
+          last_name: user.lastName,
+          email: user.email,
+        });
+    }
+  }
+  catch (e) {
+    console.error(e.response.data.error);
+  }
+}

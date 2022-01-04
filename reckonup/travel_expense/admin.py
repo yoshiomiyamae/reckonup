@@ -24,7 +24,7 @@ class DestinationAdmin(admin.ModelAdmin):
 admin.site.register(models.DailyAllowance)
 admin.site.register(models.AccommodationFee)
 admin.site.register(models.TravelExpenseArea)
-admin.site.register(models.Expence)
+admin.site.register(models.Expense)
 admin.site.register(models.BusinessTrip)
 admin.site.register(models.Destination, DestinationAdmin)
 admin.site.register(models.Receipt)

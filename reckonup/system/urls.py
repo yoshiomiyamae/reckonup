@@ -4,7 +4,11 @@ from django.urls import path
 
 urlpatterns = [
     path(
-        'authentication_information',
-        views.AuthenticationInformationView.as_view()
+        'login_user',
+        views.LoginUserView.as_view()
+    ),
+    path(
+        'change_password',
+        views.ChangePasswordView.as_view()
     ),
 ] + create_rest_router_urls(views)

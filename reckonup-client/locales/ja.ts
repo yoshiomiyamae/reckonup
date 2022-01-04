@@ -65,6 +65,17 @@ export default <Dictionary>{
   'Last name': '姓',
   'E-mail': 'Eメール',
   'Active': '有効',
+  'Super user': 'スーパーユーザー',
+  'Staff': 'スタッフ権限',
+  'Classification': '等級',
+  'Department': '部署',
+  'Last login': '最終ログイン',
+  'Date joined': '登録日時',
   // 'Save': '保存',
   // 'Cancel': 'キャンセル',
+
+  // Change password page
+  'Change password': 'パスワードの変更',
+  'New password': '新パスワード',
+  'New password (confirm)': '新パスワード (確認)',
 }

@@ -44,7 +44,7 @@ export class User implements IUser {
   static fromUserResponse = (userResponse: UserResponse) => new User({
     id: userResponse.id,
     isActive: userResponse.is_active,
-    lastLogin: userResponse.last_login,
+    lastLogin: new Date(userResponse.last_login),
     userName: userResponse.username,
     firstName: userResponse.first_name,
     lastName: userResponse.last_name,
@@ -60,7 +60,7 @@ export class User implements IUser {
 export interface UserResponse {
   id?: number;
   is_active?: boolean;
-  last_login?: Date;
+  last_login?: string;
   username?: string;
   first_name?: string;
   last_name?: string;
@@ -205,6 +205,83 @@ export class DepartmentResponseCollection extends Array<DepartmentResponse>{
       latitude: 0,
       longitude: 0,
       parent_id: 0,
+    }
+  );
+}
+
+export interface ChangePasswordResponse {
+  new_password: string;
+}
+
+export interface ICurrency {
+  id: number;
+  name: string;
+  code: string;
+  codeNumber: number;
+}
+
+export class Currency implements ICurrency {
+  id: number;
+  name: string;
+  code: string;
+  codeNumber: number;
+
+  constructor(currency: ICurrency) {
+    this.id = currency.id;
+    this.name = currency.name;
+    this.code = currency.code;
+    this.codeNumber = currency.codeNumber;
+  }
+
+  static fromCurrencyResponse(currencyResponse: CurrencyResponse) {
+    return new Currency({
+      id: currencyResponse.id,
+      name: currencyResponse.name,
+      code: currencyResponse.code,
+      codeNumber: currencyResponse.code_number,
+    });
+  }
+}
+
+export class CurrencyCollection extends Array<Currency>{
+  get = (id: number): Currency => (
+    this.find(d => d.id === id) ||
+    {
+      id: 0,
+      name: '',
+      code: '',
+      codeNumber: 0,
+    }
+  );
+
+  constructor(currencies: Currency[] = []) {
+    super();
+    if (!Array.isArray(currencies)) {
+      return;
+    }
+    this.push(...currencies);
+  }
+
+  static fromCurrencyResponseCollection = (currencyResponses: CurrencyResponseCollection) => new CurrencyCollection(
+    currencyResponses.map(d => Currency.fromCurrencyResponse(d))
+  );
+}
+
+export interface CurrencyResponse {
+  id: number;
+  name: string;
+  code: string;
+  code_number: number;
+}
+
+export class CurrencyResponseCollection extends Array<CurrencyResponse>{
+  get = (id: number): CurrencyResponse => (
+    this.find(d => d.id === id) ||
+    {
+      id: 0,
+      name: '',
+      code: '',
+      code_number: 0,
     }
   );
 }

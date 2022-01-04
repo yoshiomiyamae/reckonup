@@ -1,15 +1,19 @@
 import { faAngleLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
+
+import * as dateFns from 'date-fns';
+
 import { UserState } from "../common/atom";
 import Layout from "../component/layout";
 import Loading from "../component/loading";
 import LoginCheck from "../component/login-check";
 import { Translate } from "../locales";
-import { getClassifications, getDepartments, putUser } from "../logics/system";
+import { getClassifications, getDepartments } from "../logics/system";
 import { ClassificationCollection, DepartmentCollection } from "../models/system";
+import { updateLoginUser } from "../logics/auth";
 
 export const Profile = () => {
   const router = useRouter();
@@ -37,7 +41,7 @@ export const Profile = () => {
       // Dynamic import to avoid SSR
       const { immediateToast } = await import('izitoast-react');
       try {
-        await putUser(tempUser);
+        await updateLoginUser(tempUser);
         immediateToast('success', { message: t.t('Saved!') })
         router.push('/list');
       } catch (e) {
@@ -52,7 +56,7 @@ export const Profile = () => {
         {tempUser && classifications && departments
           ? <>
             <div className="container">
-              <h3 className="title">{t.t('Edit profile')}</h3>
+              <h3 className="title is-3">{t.t('Edit profile')}</h3>
               <div className="field">
                 <div className="field is-horizontal">
                   <div className="field-label is-normal">
@@ -173,10 +177,54 @@ export const Profile = () => {
                         <input
                           type="checkbox"
                           checked={tempUser.isActive}
-                          onChange={(e) => setTempUser({
-                            ...tempUser,
-                            isActive: e.currentTarget.checked,
-                          })}
+                        // onChange={(e) => setTempUser({
+                        //   ...tempUser,
+                        //   isActive: e.currentTarget.checked,
+                        // })}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="field is-horizontal">
+                <div className="field-label">
+                  <label className="label">{t.t('Super user')}</label>
+                </div>
+                <div className="field-body">
+                  <div className="field is-narrow">
+                    <div className="control">
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          checked={tempUser.isSuperuser}
+                          // onChange={(e) => setTempUser({
+                          //   ...tempUser,
+                          //   isSuperuser: e.currentTarget.checked,
+                          // })}
+                          readOnly
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="field is-horizontal">
+                <div className="field-label">
+                  <label className="label">{t.t('Staff')}</label>
+                </div>
+                <div className="field-body">
+                  <div className="field is-narrow">
+                    <div className="control">
+                      <label className="checkbox">
+                        <input
+                          type="checkbox"
+                          checked={tempUser.isStaff}
+                          // onChange={(e) => setTempUser({
+                          //   ...tempUser,
+                          //   isStaff: e.currentTarget.checked,
+                          // })}
+                          readOnly
                         />
                       </label>
                     </div>
@@ -249,6 +297,46 @@ export const Profile = () => {
                           )}
                         </select>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="field">
+                <div className="field is-horizontal">
+                  <div className="field-label is-normal">
+                    <label className="label">{t.t('Last login')}</label>
+                  </div>
+                  <div className="field-body">
+                    <div className="field">
+                      <p className="control">
+                        <input
+                          className="input"
+                          type="text"
+                          placeholder={t.t('Last login')}
+                          value={dateFns.format(new Date(tempUser.lastLogin), t.t('LONG_DATE_TIME_FORMAT'))}
+                          readOnly
+                        />
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="field">
+                <div className="field is-horizontal">
+                  <div className="field-label is-normal">
+                    <label className="label">{t.t('Date joined')}</label>
+                  </div>
+                  <div className="field-body">
+                    <div className="field">
+                      <p className="control">
+                        <input
+                          className="input"
+                          type="text"
+                          placeholder={t.t('Date joined')}
+                          value={dateFns.format(new Date(tempUser.dateJoined), t.t('LONG_DATE_TIME_FORMAT'))}
+                          readOnly
+                        />
+                      </p>
                     </div>
                   </div>
                 </div>

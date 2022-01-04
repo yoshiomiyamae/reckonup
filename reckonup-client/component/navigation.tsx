@@ -5,9 +5,9 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { format } from 'react-string-format';
 
-import { clearAuthenticationInformation } from '../logics/auth';
+import { clearLoginUser } from '../logics/auth';
 import { IsLoggedInState, JwtTokenState, RefreshTokenState, UserState } from '../common/atom';
-import { User } from '../models/user';
+import { User } from '../models/system';
 import { Translate } from '../locales';
 
 import styles from '../styles/navigation.module.scss';
@@ -35,7 +35,7 @@ export const Navigation = ({ navigation }: NavigationProps) => {
   const t = new Translate(locale);
 
   const logout = () => {
-    clearAuthenticationInformation();
+    clearLoginUser();
     setJwtToken('');
     setRefreshToken('');
     setIsLoggedIn(false);
@@ -70,6 +70,11 @@ export const Navigation = ({ navigation }: NavigationProps) => {
               <Link href="/profile">
                 <a className="navbar-item">
                   {t.t('Profile')}
+                </a>
+              </Link>
+              <Link href="/change-password">
+                <a className="navbar-item">
+                  {t.t('Change password')}
                 </a>
               </Link>
               <Link href="/login">

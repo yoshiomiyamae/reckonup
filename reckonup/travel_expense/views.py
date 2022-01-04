@@ -1,6 +1,8 @@
 import sys
 
-from reckonup.api import create_viewset
+from rest_framework import generics
+from reckonup.api import create_viewset, MultipleFieldLookupMixin
+
 from . import models
 
 myself = sys.modules[__name__]
