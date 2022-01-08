@@ -35,10 +35,11 @@ def sort_by_line_no(cls):
 
 def create_viewset(models_module):
     from rest_framework import viewsets, generics
-    from rest_framework import serializers
     output = {}
 
-    for n, c in sorted(inspect.getmembers(models_module, inspect.isclass), key=sort_by_line_no):
+    for n, c in sorted(
+        inspect.getmembers(models_module, inspect.isclass), key=sort_by_line_no
+    ):
         if (
             not hasattr(c, '_meta') or
             n in {'AbstractBaseUser', 'PermissionsMixin'}
@@ -54,7 +55,13 @@ def create_viewset(models_module):
             ] + [
                 x.related_name
                 for x in c()._meta.related_objects
-                if x.related_name is not None and f'{x.related_model._meta.object_name}{SERIALIZER}' in output
+                if (
+                    x.related_name is not None and
+                    (
+                        f'{x.related_model._meta.object_name}{SERIALIZER}'
+                        in output
+                    )
+                )
             ] + [
                 key for key, value in vars(c).items()
                 if isinstance(value, property)
@@ -65,10 +72,15 @@ def create_viewset(models_module):
             (WritableNestedModelSerializer,),
             {
                 **{
-                    x.related_name: output[f'{x.related_model._meta.object_name}{SERIALIZER}'](
-                        many=x.multiple)
+                    x.related_name: output[
+                        f'{x.related_model._meta.object_name}{SERIALIZER}'
+                    ](many=x.multiple)
                     for x in c()._meta.related_objects
-                    if x.related_name is not None and f'{x.related_model._meta.object_name}{SERIALIZER}' in output
+                    if (
+                        x.related_name is not None and
+                        f'{x.related_model._meta.object_name}{SERIALIZER}'
+                        in output
+                    )
                 },
                 'Meta': type(
                     'Meta',

@@ -428,7 +428,7 @@ export class TravelExpenseAreaResponseCollection extends Array<TravelExpenseArea
   );
 }
 
-export interface IAccommondationFee {
+export interface IAccommodationFee {
   id: number;
   travelExpenseAreaId: number;
   classificationId: number;
@@ -436,20 +436,20 @@ export interface IAccommondationFee {
   currencyId: number;
 }
 
-export class AccommondationFee implements IAccommondationFee {
+export class AccommodationFee implements IAccommodationFee {
   id: number;
   travelExpenseAreaId: number;
   classificationId: number;
   value: number;
   currencyId: number;
 
-  constructor(accommondationFee: IAccommondationFee | null = null) {
-    if (accommondationFee) {
-      this.id = accommondationFee.id;
-      this.travelExpenseAreaId = accommondationFee.travelExpenseAreaId;
-      this.classificationId = accommondationFee.classificationId;
-      this.value = accommondationFee.value;
-      this.currencyId = accommondationFee.currencyId;
+  constructor(accommodationFee: IAccommodationFee | null = null) {
+    if (accommodationFee) {
+      this.id = accommodationFee.id;
+      this.travelExpenseAreaId = accommodationFee.travelExpenseAreaId;
+      this.classificationId = accommodationFee.classificationId;
+      this.value = accommodationFee.value;
+      this.currencyId = accommodationFee.currencyId;
     } else {
       this.id = 0;
       this.travelExpenseAreaId = 0;
@@ -459,35 +459,35 @@ export class AccommondationFee implements IAccommondationFee {
     }
   }
 
-  static fromAccommondationFeeResponse = (accommondationFeeResponse: AccommondationFeeResponse) => new AccommondationFee({
-    id: accommondationFeeResponse.id,
-    travelExpenseAreaId: accommondationFeeResponse.travelExpenseArea,
-    classificationId: accommondationFeeResponse.classification,
-    value: accommondationFeeResponse.value,
-    currencyId: accommondationFeeResponse.currency,
+  static fromAccommodationFeeResponse = (accommodationFeeResponse: AccommodationFeeResponse) => new AccommodationFee({
+    id: accommodationFeeResponse.id,
+    travelExpenseAreaId: accommodationFeeResponse.travelExpenseArea,
+    classificationId: accommodationFeeResponse.classification,
+    value: accommodationFeeResponse.value,
+    currencyId: accommodationFeeResponse.currency,
   });
 }
 
-export class AccommondationFeeCollection extends Array<AccommondationFee> {
-  get = (id: number): AccommondationFee => (
+export class AccommodationFeeCollection extends Array<AccommodationFee> {
+  get = (id: number): AccommodationFee => (
     this.find(d => d.id === id) ||
-    new AccommondationFee()
+    new AccommodationFee()
   );
 
-  constructor(accommondationFees: AccommondationFee[] = []) {
+  constructor(accommodationFees: AccommodationFee[] = []) {
     super();
-    if (!Array.isArray(accommondationFees)) {
+    if (!Array.isArray(accommodationFees)) {
       return;
     }
-    this.push(...accommondationFees);
+    this.push(...accommodationFees);
   }
 
-  static fromAccommondationFeeResponseCollection = (accommondationFeeResponses: AccommondationFeeResponseCollection) => new AccommondationFeeCollection(
-    accommondationFeeResponses.map(d => AccommondationFee.fromAccommondationFeeResponse(d))
+  static fromAccommodationFeeResponseCollection = (accommodationFeeResponses: AccommodationFeeResponseCollection) => new AccommodationFeeCollection(
+    accommodationFeeResponses.map(d => AccommodationFee.fromAccommodationFeeResponse(d))
   );
 }
 
-export interface AccommondationFeeResponse {
+export interface AccommodationFeeResponse {
   id: number;
   travelExpenseArea: number;
   classification: number;
@@ -495,8 +495,8 @@ export interface AccommondationFeeResponse {
   currency: number;
 }
 
-export class AccommondationFeeResponseCollection extends Array<AccommondationFeeResponse> {
-  get = (id: number): AccommondationFeeResponse => (
+export class AccommodationFeeResponseCollection extends Array<AccommodationFeeResponse> {
+  get = (id: number): AccommodationFeeResponse => (
     this.find(d => d.id === id) ||
     {
       id: 0,

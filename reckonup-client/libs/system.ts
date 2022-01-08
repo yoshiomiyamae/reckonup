@@ -1,10 +1,13 @@
 import axios, { AxiosResponse } from "axios";
 import { SERVER_SETTINGS } from "../common/config";
 import {
+  CalendarCollection,
+  CalendarResponseCollection,
   ChangePasswordResponse,
   ClassificationCollection,
   ClassificationResponseCollection,
   DepartmentCollection,
+  DepartmentResponseCollection,
   User,
   UserResponse
 } from "../models/system";
@@ -35,7 +38,7 @@ export const getClassifications = async () => {
 
 export const getDepartments = async () => {
   try {
-    const response = await axios.get<ClassificationResponseCollection>(
+    const response = await axios.get<DepartmentResponseCollection>(
       `${SERVER_SETTINGS.getUrl()}/api/system/department/`
     );
     return DepartmentCollection.fromDepartmentResponseCollection(response.data);
@@ -51,4 +54,16 @@ export const changePassword = async (newPassword: string) => {
     {
       new_password: newPassword
     });
+}
+
+export const getCalendar = async () => {
+  try {
+    const response = await axios.get<CalendarResponseCollection>(
+      `${SERVER_SETTINGS.getUrl()}/api/system/calendar/`
+    );
+    return CalendarCollection.fromCalendarResponseCollection(response.data);
+  }
+  catch (e) {
+    console.error(e.response.data.error);
+  }
 }

@@ -1,3 +1,5 @@
+import { endOfDay, startOfDay, format } from "date-fns";
+
 export interface IUser {
   id: number;
   isActive?: boolean;
@@ -282,6 +284,72 @@ export class CurrencyResponseCollection extends Array<CurrencyResponse>{
       name: '',
       code: '',
       code_number: 0,
+    }
+  );
+}
+
+export interface ICalendar {
+  date: Date;
+  isHoliday: boolean;
+}
+
+export class Calendar implements ICalendar {
+  date: Date;
+  isHoliday: boolean;
+
+  constructor(calendar: ICalendar | null = null) {
+    if (calendar) {
+      this.date = calendar.date;
+      this.isHoliday = calendar.isHoliday;
+    } else {
+      this.date = new Date();
+      this.isHoliday = false
+    }
+  }
+
+  static fromCalendarResponse(calendarResponse: CalendarResponse) {
+    return new Calendar({
+      date: new Date(calendarResponse.date),
+      isHoliday: calendarResponse.is_holiday,
+    });
+  }
+}
+
+export class CalendarCollection extends Array<Calendar>{
+  get = (date: Date): Calendar => (
+    this.find(d => d.date.getTime() === date.getTime()) ||
+    new Calendar()
+  );
+
+  countHoliday = (startDate: Date, endDate: Date) => {
+    const holidays = this.filter(d => d.isHoliday);
+    return holidays.filter(d => d.date >= startOfDay(startDate) && d.date <= endOfDay(endDate)).length;
+  }
+
+  constructor(calendars: Calendar[] = []) {
+    super();
+    if (!Array.isArray(calendars)) {
+      return;
+    }
+    this.push(...calendars);
+  }
+
+  static fromCalendarResponseCollection = (calendarResponses: CalendarResponseCollection) => new CalendarCollection(
+    calendarResponses.map(d => Calendar.fromCalendarResponse(d))
+  );
+}
+
+export interface CalendarResponse {
+  date: string;
+  is_holiday: boolean;
+}
+
+export class CalendarResponseCollection extends Array<CalendarResponse>{
+  get = (date: Date): CalendarResponse => (
+    this.find(d => d.date === format(date, "yyyy-MM-dd")) ||
+    {
+      date: '',
+      is_holiday: false,
     }
   );
 }

@@ -59,6 +59,10 @@ class Expense(models.Model):
         on_delete=models.CASCADE,
         related_name='expenses'
     )
+    expense_type = models.ForeignKey(
+        'ExpenseType',
+        on_delete=models.PROTECT
+    )
     date_time = models.DateTimeField()
     value = models.DecimalField(
         decimal_places=3,
@@ -83,6 +87,15 @@ class Expense(models.Model):
             f"{self.value} {self.currency} "
             f"{'Paid' if self.paid else 'Not paid'} "
         )
+
+
+class ExpenseType(models.Model):
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=256, blank=True, null=True)
+    is_voucher_needed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 
 class BusinessTrip(models.Model):

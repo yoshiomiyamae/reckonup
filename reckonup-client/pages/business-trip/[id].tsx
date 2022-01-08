@@ -16,7 +16,8 @@ import { Translate } from "../../locales";
 import { getBusinessTrip, getDailyAllowances, getDestinations, putBusinessTrip } from "../../logics/travel-expense";
 import { BusinessTrip, DailyAllowanceCollection, DestinationCollection } from "../../models/travel-expense";
 import { faSave, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { User } from "../../models/system";
+import { CalendarCollection, User } from "../../models/system";
+import { getCalendar } from "../../logics/system";
 
 export const BusinessTripPage = () => {
   const router = useRouter();
@@ -31,19 +32,26 @@ export const BusinessTripPage = () => {
   const [dayCount, setDayCount] = useState(0);
   const [dailyAllowance, setDailyAllowance] = useState<number>(0);
   const [dailyAllowanceTotal, setDailyAllowanceTotal] = useState<number>(0);
+  const [calendar, setCalendar] = useState<CalendarCollection>(new CalendarCollection());
+  const [holidayCount, setHolidayCount] = useState(0);
+  const [workdayCount, setWorkdayCount] = useState(0);
 
   const t = new Translate(router.locale);
 
   useEffect(() => {
+    // When login check has finished
     (async () => {
       if (!isLoginOk) {
         return;
       }
       setDestinations(await getDestinations());
-      setDailyAllowances(await getDailyAllowances())
+      setDailyAllowances(await getDailyAllowances());
+      setCalendar(await getCalendar());
     })();
   }, [isLoginOk]);
+
   useEffect(() => {
+    // When login check has finished and router is ready
     (async () => {
       if (!isLoginOk || !router.isReady || !user) {
         return;
@@ -60,15 +68,29 @@ export const BusinessTripPage = () => {
       }
     })();
   }, [isLoginOk, user, router.isReady, router.query.id]);
+
   useEffect(() => {
+    // When login check has finished and daily allowance list has loaded
     setDailyAllowance(dailyAllowances.get(user.classificationId).value);
   }, [isLoginOk, user, dailyAllowances]);
+
   useEffect(() => {
-    setDayCount(Math.ceil((businessTrip.endDateTime.getTime() - businessTrip.startDateTime.getTime()) / 86400000) + 1);
-  }, [businessTrip.endDateTime, businessTrip.startDateTime]);
+    // When the business trip period has changed
+    const dc = Math.ceil((businessTrip.endDateTime.getTime() - businessTrip.startDateTime.getTime()) / 86400000) + 1;
+    setDayCount(dc);
+    if (calendar.length === 0) {
+      return;
+    }
+    const hc = calendar.countHoliday(businessTrip.startDateTime, businessTrip.endDateTime);
+    setHolidayCount(hc);
+    setWorkdayCount(dc - hc);
+  }, [businessTrip.endDateTime, businessTrip.startDateTime, calendar]);
+
   useEffect(() => {
-    setDailyAllowanceTotal(dayCount * dailyAllowance);
-  }, [dayCount, dailyAllowance]);
+    // When day count or daily allowance has changed
+    // TODO: Change not to hard code
+    setDailyAllowanceTotal(Math.round(workdayCount * dailyAllowance + holidayCount * dailyAllowance * 1.5));
+  }, [dayCount, holidayCount, dailyAllowance]);
 
   const onSaveButtonClicked = async () => {
     if (process.browser) {
@@ -99,6 +121,9 @@ export const BusinessTripPage = () => {
                     <h3 className="title is-3">{t.t('New business trip')}</h3>
                   </>
                 }
+
+                <hr />
+
                 <h4 className="title is-4">{t.t('Basic information')}</h4>
                 <div className="field">
                   {businessTrip.id !== 0
@@ -206,6 +231,42 @@ export const BusinessTripPage = () => {
                   </div>
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
+                      <label className="label">{t.t('Workday count')}</label>
+                    </div>
+                    <div className="field-body">
+                      <div className="field">
+                        <p className="control">
+                          <input
+                            className="input"
+                            type="text"
+                            placeholder={t.t('Workday count')}
+                            value={workdayCount}
+                            readOnly
+                          />
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                      <label className="label">{t.t('Holiday count')}</label>
+                    </div>
+                    <div className="field-body">
+                      <div className="field">
+                        <p className="control">
+                          <input
+                            className="input"
+                            type="text"
+                            placeholder={t.t('Holiday count')}
+                            value={holidayCount}
+                            readOnly
+                          />
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="field is-horizontal">
+                    <div className="field-label is-normal">
                       <label className="label">{t.t('Daily allowance')}</label>
                     </div>
                     <div className="field-body">
@@ -222,6 +283,17 @@ export const BusinessTripPage = () => {
                       </div>
                     </div>
                   </div>
+
+                  <hr />
+                  <h4 className="title is-4">{t.t('Accommodation fee')}</h4>
+
+                  <hr />
+                  <h4 className="title is-4">{t.t('Transpotation fee')}</h4>
+
+                  <hr />
+                  <h4 className="title is-4">{t.t('Summary')}</h4>
+
+                  <hr />
 
                   <div className="field buttons is-right">
                     <div className="control">

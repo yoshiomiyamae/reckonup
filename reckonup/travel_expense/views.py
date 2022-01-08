@@ -1,7 +1,7 @@
 import sys
 
 from rest_framework import generics
-from reckonup.api import create_viewset, MultipleFieldLookupMixin
+from reckonup.api import create_viewset
 
 from . import models
 

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { IsLoggedInState, JwtTokenState, PasswordState, RefreshTokenState, RememberMeState, UserNameState, UserState } from '../common/atom';
-import { login } from '../logics/auth';
+import { login } from '../libs/auth';
 import Layout from '../component/layout'
 import Nothing from '../component/nothing';
 import { Translate } from '../locales';
@@ -105,6 +105,7 @@ export const Login = () => {
                     </div>
                   </div>
                 </div>
+                {/* To keep the security, remember me function is disabled*/}
                 {/* <div className="field is-horizontal">
                   <div className="field-label">
                     <label className="label">{t.t('Remember me')}</label>
