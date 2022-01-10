@@ -1,0 +1,96 @@
+scalar GenericScalar
+
+type TokenAuthResponse {
+  token: String!
+  payload: GenericScalar!
+  refreshToken: String!
+  refreshExpiresIn: Int!
+}
+
+type VerifyTokenResponse {
+  payload: GenericScalar!
+}
+
+type RevokeTokenResponse {
+  revoked: Boolean!
+}
+
+type Grade {
+  id: Int!
+  name: String!
+}
+
+type Department {
+  id: Int!
+  name: String!
+}
+
+type Profile {
+  grade: Grade
+  department: Department
+}
+
+type User {
+  id: Int!
+  username: String!
+  password: String
+  firstName: String
+  lastName: String
+  email: String
+  isSuperuser: Boolean!
+  isStaff: Boolean!
+  isActive: Boolean!
+  profile: Profile
+  lastLogin: String
+  dateJoined: String!
+}
+
+type Currency {
+  id: Int!
+  name: String!
+  code: String!
+  codeNumber: Int!
+}
+
+type Country {
+  id: Int!
+  name: String!
+  code: String
+  code2: String
+  numeric: Int
+  countryFlag: String
+}
+
+type Calendar {
+  date: String!
+  isHoliday: Boolean!
+}
+
+type UserUpdateResponse {
+  id: Int!
+}
+
+#-------------------------------------------------------------------------------
+
+type Mutation {
+  tokenAuth(username: String!, password: String!): TokenAuthResponse!
+  verifyToken(token: String!): VerifyTokenResponse!
+  refreshToken(refreshToken: String!): TokenAuthResponse!
+  revokeToken(refreshToken: String!): RevokeTokenResponse!
+  updateLoginUser(
+    id: Int!
+    firstName: String
+    lastName: String
+    email: String
+    gradeId: Int
+    departmentId: Int
+  ): UserUpdateResponse!
+}
+
+type Query {
+  loginUser: User!
+  calendars: [Calendar!]!
+  grades: [Grade!]!
+  departments: [Department!]!
+  currencies: [Currency!]!
+}

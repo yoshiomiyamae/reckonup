@@ -1,0 +1,71 @@
+type DailyAllowance {
+  grade: Grade!
+  value: Float!
+  currency: Currency!
+}
+
+type TravelExpenseArea {
+  name: String!
+  description: String
+}
+
+type AccommodationFee {
+  travelExpenseArea: TravelExpenseArea!
+  grade: Grade!
+  value: Float!
+  currency: Currency!
+}
+
+type Destination {
+  id: Int!
+  name: String!
+  description: String
+  latitude: Float
+  longitude: Float
+}
+
+type BusinessTrip {
+  id: Int!
+  user: User
+  startDateTime: String!
+  endDateTime: String!
+  destination: Destination!
+  expenses: [Expense!]!
+}
+
+type ExpenseType {
+  id: Int!
+  name: String!
+  description: String
+  isVoucherNeeded: Boolean!
+}
+
+type File {
+  owner: User!
+  mimeType: String!
+  data: String
+}
+
+type ApprovalRoute {
+  user: User!
+  nextUser: User!
+}
+
+type Expense {
+  expenseType: ExpenseType!
+  dateTime: String!
+  value: Float
+  currency: Currency!
+  paid: Boolean!
+  remarks: String
+  receipt: File
+}
+
+#-------------------------------------------------------------------------------
+
+type Query {
+  loginUserBusinessTrips: [BusinessTrip!]!
+  businessTrip(id: Int!): BusinessTrip!
+  destinations: [Destination!]!
+  expenseTypes: [ExpenseType!]!
+}

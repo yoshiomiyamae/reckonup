@@ -1,0 +1,53 @@
+query LoginUser {
+  loginUser {
+    id
+    username
+    firstName
+    lastName
+    email
+    isSuperuser
+    isStaff
+    isActive
+    profile {
+      grade {
+        id
+        name
+      }
+      department {
+        id
+        name
+      }
+    }
+    lastLogin
+    dateJoined
+  }
+}
+query Calendars {
+  calendars {
+    date
+    isHoliday
+  }
+}
+
+query Grades {
+  grades {
+    id
+    name
+  }
+}
+
+query Departments {
+  departments {
+    id
+    name
+  }
+}
+
+query Currencies {
+  currencies {
+    id
+    name
+    code
+    codeNumber
+  }
+}

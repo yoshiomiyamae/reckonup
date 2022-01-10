@@ -1,0 +1,30 @@
+- model: travel_expense.TravelExpenseArea
+  pk: 1
+  fields:
+    name: Other area
+    description:
+- model: travel_expense.AccommodationFee
+  pk: 1
+  fields:
+    value: 9600
+    grade_id: 1
+    currency_id: 1
+    travelExpenseArea_id: 1
+- model: travel_expense.dailyAllowance
+  pk: 1
+  fields:
+    value: 2500
+    grade_id: 1
+    currency_id: 1
+- model: travel_expense.expenseType
+  pk: 1
+  fields:
+    name: Train
+    description:
+    is_voucher_needed: False
+- model: travel_expense.expenseType
+  pk: 2
+  fields:
+    name: Taxi
+    description:
+    is_voucher_needed: True

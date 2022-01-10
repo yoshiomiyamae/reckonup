@@ -1,0 +1,59 @@
+query LoginUserBusinessTrips {
+  loginUserBusinessTrips {
+    id
+    destination {
+      name
+    }
+    startDateTime
+    endDateTime
+    expenses {
+      value
+    }
+  }
+}
+
+query BusinessTrip($id: Int!) {
+  businessTrip(id: $id) {
+    id
+    destination {
+      id
+      name
+    }
+    startDateTime
+    endDateTime
+    expenses {
+      expenseType {
+        id
+        name
+      }
+      dateTime
+      value
+      currency {
+        id
+        name
+      }
+      paid
+      remarks
+      receipt {
+        mimeType
+        data
+      }
+    }
+  }
+}
+
+query DestinationIdNames {
+  destinations {
+    id
+    name
+  }
+}
+
+query ExpenseTypes {
+  expenseTypes {
+    id
+    name
+    description
+    isVoucherNeeded
+  }
+}
