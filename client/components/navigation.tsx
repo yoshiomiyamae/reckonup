@@ -12,6 +12,7 @@ import Nothing from './nothing';
 import { User } from '../gql/types';
 import { useRevokeTokenMutation } from '../gql/mutations/system.generated';
 import classnames from 'classnames';
+import Image from 'next/image';
 
 
 const md5 = (data: string | undefined | null) =>
@@ -46,7 +47,13 @@ export const Navigation = ({ navigation, user }: NavigationProps) => {
       <div className="navbar-brand">
         <Link href="/">
           <a className="navbar-item">
-            <img className={styles.reckonupLogo} src="/reckonup-logo.svg" height="34" alt="Reckonup" />
+            <Image
+              className={styles.reckonupLogo}
+              src="/reckonup-logo.svg"
+              height="34"
+              width="221"
+              alt="Reckonup"
+            />
           </a>
         </Link>
 

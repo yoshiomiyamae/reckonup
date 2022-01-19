@@ -94,6 +94,7 @@ export type Expense = {
   currency: Currency;
   dateTime: Scalars['String'];
   expenseType: ExpenseType;
+  id: Scalars['Int'];
   paid: Scalars['Boolean'];
   receipt?: Maybe<File>;
   remarks?: Maybe<Scalars['String']>;
@@ -240,7 +241,7 @@ export type BusinessTripQueryVariables = Types.Exact<{
 }>;
 
 
-export type BusinessTripQuery = { __typename?: 'Query', businessTrip: { __typename?: 'BusinessTrip', id: number, startDateTime: string, endDateTime: string, destination: { __typename?: 'Destination', id: number, name: string }, expenses: Array<{ __typename?: 'Expense', dateTime: string, value?: number | null | undefined, paid: boolean, remarks?: string | null | undefined, expenseType: { __typename?: 'ExpenseType', id: number, name: string }, currency: { __typename?: 'Currency', id: number, name: string }, receipt?: { __typename?: 'File', mimeType: string, data?: string | null | undefined } | null | undefined }> } };
+export type BusinessTripQuery = { __typename?: 'Query', businessTrip: { __typename?: 'BusinessTrip', id: number, startDateTime: string, endDateTime: string, destination: { __typename?: 'Destination', id: number, name: string }, expenses: Array<{ __typename?: 'Expense', id: number, dateTime: string, value?: number | null | undefined, paid: boolean, remarks?: string | null | undefined, expenseType: { __typename?: 'ExpenseType', id: number, name: string }, currency: { __typename?: 'Currency', id: number, name: string }, receipt?: { __typename?: 'File', mimeType: string, data?: string | null | undefined } | null | undefined }> } };
 
 export type DestinationIdNamesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -319,6 +320,7 @@ export const BusinessTripDocument = gql`
     startDateTime
     endDateTime
     expenses {
+      id
       expenseType {
         id
         name

@@ -17,6 +17,7 @@ import * as dateFns from 'date-fns';
 
 import styles from '../../styles/business-trip.module.scss';
 import classNames from "classnames";
+import ExpenseComponent from "../../components/business-trip/expense";
 
 const EMPTY_BUSINESS_TRIP: BusinessTrip = {
   id: 0,
@@ -27,10 +28,11 @@ const EMPTY_BUSINESS_TRIP: BusinessTrip = {
 }
 
 const EMPTY_EXPENSE: Expense = {
+  id: 0,
   currency: { id: 0, name: '', codeNumber: 0, code: '' },
   expenseType: { id: 0, name: '', isVoucherNeeded: true },
   paid: false,
-  dateTime: '1900-01-01',
+  dateTime: new Date().toISOString(),
 }
 
 interface BusinessTripPageProps {
@@ -54,7 +56,7 @@ export const BusinessTripPage: NextPage<BusinessTripPageProps> = ({ user, busine
   const [destinationId, setDestinationId] = useState(businessTrip ? businessTrip.destination.id : 0);
   const [startDateTime, setStartDateTime] = useState(businessTrip ? new Date(businessTrip.startDateTime) : new Date());
   const [endDateTime, setEndDateTime] = useState(businessTrip ? new Date(businessTrip.endDateTime) : new Date());
-  const [expenses, setExpenses] = useState<Expense[]>(businessTrip ? [...businessTrip.expenses, EMPTY_EXPENSE] : []);
+  const [expenses, setExpenses] = useState<Expense[]>(businessTrip ? [...businessTrip.expenses, EMPTY_EXPENSE] : [EMPTY_EXPENSE]);
   const [accommodationDays, setAccommodationDays] = useState(0);
   const [accommodationFee, setAccommodationFee] = useState(0);
 
@@ -66,7 +68,11 @@ export const BusinessTripPage: NextPage<BusinessTripPageProps> = ({ user, busine
     const dc = Math.ceil((edt.getTime() - sdt.getTime()) / 86400000) + 1;
     setDayCount(dc);
     if (calendars) {
-      const hc = calendars.filter(c => c.isHoliday).map(c => new Date(c.date).getTime()).filter(t => t >= dateFns.startOfDay(sdt).getTime() && t <= dateFns.endOfDay(edt).getTime()).length
+      const hc = calendars
+        .filter(c => c.isHoliday)
+        .map(c => new Date(c.date).getTime())
+        .filter(t => t >= dateFns.startOfDay(sdt).getTime() && t <= dateFns.endOfDay(edt).getTime())
+        .length
       setHolidayCount(hc);
       setWorkdayCount(dc - hc);
     }
@@ -332,67 +338,29 @@ export const BusinessTripPage: NextPage<BusinessTripPageProps> = ({ user, busine
                 </tr>
               </thead>
               <tbody>
-                {expenses.map((tf) => <tr>
-                  <td>
-                    <div className="select is-fullwidth">
-                      <select
-                        value={tf.expenseType.id}
-                      // onChange={(e) => setDestinationId(Number(e.currentTarget.value))}
-                      >
-                        <option
-                          key="business-trip-expense-expensetype-0"
-                          value="0"
-                        >
-                          Select expense type
-                        </option>
-                        {expenseTypes!.map(et => <option value={et.id}>{et.name}</option>)}
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-
-                  </td>
-                  <td>
-                    <input className="input" type="text" />
-                  </td>
-                  <td>
-                    <div className="select is-fullwidth">
-                      <select
-                        value={tf.currency.id}
-                      // onChange={(e) => setDestinationId(Number(e.currentTarget.value))}
-                      >
-                        <option
-                          key="business-trip-expense-currency-0"
-                          value="0"
-                        >
-                          Select currency
-                        </option>
-                        {currencies!.map(c => <option value={c.id}>{c.name}</option>)}
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-                    <input className="input" type="text" />
-                  </td>
-                  <td>
-                    <input className="checkbox" type="checkbox" />
-                  </td>
-                  <td>
-                    <input className="checkbox" type="checkbox" />
-                  </td>
-                  <td className={styles.expenseActions}>
-                    <button className="button is-danger">
-                      <span className="icon">
-                        <FontAwesomeIcon icon={faMinus} />
-                      </span>
-                    </button>
-                    <button className="button is-primary">
-                      <span className="icon">
-                        <FontAwesomeIcon icon={faPlus} />
-                      </span>
-                    </button>
-                  </td>
-                </tr>)}
+                {expenses.map((exp, i) => <>
+                  <ExpenseComponent
+                    key={`business-trip-expenses-expense-${exp.id}`}
+                    expense={exp}
+                    newRow={i !== expenses.length - 1}
+                    expenseTypes={[...(expenseTypes || [])]}
+                    currencies={[...(currencies || [])]}
+                    onChange={(exp3) => setExpenses([
+                      ...expenses.map((exp2) => (exp2.id === exp3.id ? exp3 : exp2)),
+                    ])
+                    }
+                    onRemove={() => setExpenses([
+                      ...expenses.filter((exp2) => exp2.id !== exp.id),
+                    ])}
+                    onAdd={() => setExpenses([
+                      ...expenses,
+                      {
+                        ...EMPTY_EXPENSE,
+                        id: expenses.map(exp2 => exp2.id).reduce((p, c) => p > c ? p : c) + 1
+                      },
+                    ])}
+                  />
+                </>)}
               </tbody>
             </table>
           </div>
@@ -405,17 +373,6 @@ export const BusinessTripPage: NextPage<BusinessTripPageProps> = ({ user, busine
           <div className="field buttons is-right">
             <div className="control">
               <button
-                className="button is-primary"
-                onClick={onSaveButtonClicked}
-              >
-                <span className="icon is-small">
-                  <FontAwesomeIcon icon={faSave} />
-                </span>
-                <span>{t.t('Save')}</span>
-              </button>
-            </div>
-            <div className="control">
-              <button
                 className="button is-danger"
                 onClick={() => router.back()}
               >
@@ -423,6 +380,17 @@ export const BusinessTripPage: NextPage<BusinessTripPageProps> = ({ user, busine
                   <FontAwesomeIcon icon={faAngleLeft} />
                 </span>
                 <span>{t.t('Cancel')}</span>
+              </button>
+            </div>
+            <div className="control">
+              <button
+                className="button is-primary"
+                onClick={onSaveButtonClicked}
+              >
+                <span className="icon is-small">
+                  <FontAwesomeIcon icon={faSave} />
+                </span>
+                <span>{t.t('Save')}</span>
               </button>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Dictionary } from "../common/types";
+import { Dictionary } from ".";
 
 export default <Dictionary>{
   // General
@@ -68,7 +68,7 @@ export default <Dictionary>{
   'Saved!': 'Saved!',
 
   // Profile page
-  'Edit profile': 'Edit profiletexttext',
+  'Edit profile': 'Edit profile',
   'First name': 'First name',
   'Last name': 'Last name',
   'E-mail': 'E-mail',

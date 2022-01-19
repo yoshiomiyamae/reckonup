@@ -94,6 +94,7 @@ export type Expense = {
   currency: Currency;
   dateTime: Scalars['String'];
   expenseType: ExpenseType;
+  id: Scalars['Int'];
   paid: Scalars['Boolean'];
   receipt?: Maybe<File>;
   remarks?: Maybe<Scalars['String']>;

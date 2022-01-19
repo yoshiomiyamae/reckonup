@@ -5,4 +5,7 @@ module.exports = {
     locales: ["en", "ja"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["www.gravatar.com"],
+  },
 };

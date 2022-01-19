@@ -93,3 +93,56 @@ class Query(graphene.ObjectType):
         if info.context.user.is_authenticated:
             return models.BusinessTrip.objects.get(pk=kwargs.get('id'))
         return None
+
+
+class UpdateBusinessTrip(graphene.Mutation):
+    id = graphene.Int()
+
+    class Arguments:
+        id = graphene.Int(required=True)
+        user_id = graphene.Int(required=True)
+        start_date_time = graphene.DateTime(required=True)
+        end_date_time = graphene.DateTime(required=True)
+        destination_id = graphene.Int(required=True)
+
+    def mutate(self, info, id, user_id, start_date_time, end_date_time, destination_id, *args, **kwargs):
+        business_trip = models.BusinessTrip.objects.get(pk=id)
+        user = models.User.objects.get(pk=user_id)
+        business_trip.user = user
+        business_trip.start_date_time = start_date_time
+        business_trip.end_date_time = end_date_time
+        destination = models.Destination.objects.get(pk=destination_id)
+        business_trip.destination = destination
+        business_trip.save()
+        models.Expense.objects.delete(business_trip=business_trip)
+
+
+class CreateExpense(graphene.Mutation):
+    id = graphene.Int()
+
+    class Arguments:
+        business_trip_id = graphene.Int(reqired=True)
+        expense_type_id = graphene.Int(required=True)
+        date_time = graphene.DateTime()
+        value = graphene.Decimal()
+        currency_id = graphene.Int()
+        paid = graphene.Boolean()
+        remarks = graphene.String()
+
+    def mutate(self, info, business_trip_id, expense_type_id, *args, **kwargs):
+        business_trip = models.BusinessTrip.objects.get(pk=id)
+        expense_type = models.ExpenseType.objects.get(pk=expense_type_id)
+        expense = models.Expense.objects.create(
+            business_trip=business_trip, expense_type=expense_type)
+        if 'date_time' in kwargs:
+            expense.date_time = kwargs['date_time']
+        if 'value' in kwargs:
+            expense.value = kwargs['value']
+        if 'currency_id' in kwargs:
+            currency = models.Currency.objects.get(pk=kwargs['currency_id'])
+            expense.currency = currency
+        if 'paid' in kwargs:
+            expense.paid = kwargs['paid']
+        if 'remarks' in kwargs:
+            expense.remarks = kwargs['remarks']
+        expense.save()

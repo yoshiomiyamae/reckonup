@@ -329,17 +329,6 @@ export const Profile: NextPage<ProfileProps> = ({ user, grades, departments }) =
           <div className="field buttons is-right">
             <div className="control">
               <button
-                className="button is-primary"
-                onClick={onSaveButtonClicked}
-              >
-                <span className="icon is-small">
-                  <FontAwesomeIcon icon={faSave} />
-                </span>
-                <span>{t.t('Save')}</span>
-              </button>
-            </div>
-            <div className="control">
-              <button
                 className="button is-danger"
                 onClick={() => router.back()}
               >
@@ -347,6 +336,17 @@ export const Profile: NextPage<ProfileProps> = ({ user, grades, departments }) =
                   <FontAwesomeIcon icon={faAngleLeft} />
                 </span>
                 <span>{t.t('Cancel')}</span>
+              </button>
+            </div>
+            <div className="control">
+              <button
+                className="button is-primary"
+                onClick={onSaveButtonClicked}
+              >
+                <span className="icon is-small">
+                  <FontAwesomeIcon icon={faSave} />
+                </span>
+                <span>{t.t('Save')}</span>
               </button>
             </div>
           </div>
